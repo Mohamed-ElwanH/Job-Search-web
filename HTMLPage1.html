@@ -9,10 +9,16 @@
     <p>
         <a href="Link">Home</a> |
         <a href="Link">Available Jobs</a> |
-        <a href="Link">My Applications</a> |
+        <a href="HTMLAppliedjobs.html">My Applications</a> |
         <a href="Link">Login</a>
     </p>
     <hr>
+    <form action="Link" >
+         <label for="search">Search For Jobs:</label>
+         <input type="search" id="search" name="search">
+         <button type="submit">Search</button>
+    </form>
+
 
     <h3>List of Available Jobs</h3>
 
@@ -38,7 +44,7 @@
             <td style="color: green">Open</td>
             <td>
                 <a href="Link">View Details</a> |
-                <a href="Link">Apply</a>
+                <button type="button" onclick="applyForJob(1)">Apply</button>
             </td>
         </tr>
 
@@ -51,7 +57,7 @@
             <td style="color: green">Open</td>
             <td>
                 <a href="Link">View Details</a> |
-                <a href="Link">Apply</a>
+                <button type="button" onclick="applyForJob(1)">Apply</button>
             </td>
         </tr>
     </table>
