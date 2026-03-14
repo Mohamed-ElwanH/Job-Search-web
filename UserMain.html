@@ -9,9 +9,17 @@
     <p>
         <a href="Link">Home</a> |
         <a href="Link">My Applications</a> |
+        <a href="Link">Available Jobs</a> |
+        <a href="HTMLAppliedjobs.html">My Applications</a> |
         <a href="Link">Login</a>
     </p>
     <hr>
+    <form action="Link" >
+         <label for="search">Search For Jobs:</label>
+         <input type="search" id="search" name="search">
+         <button type="submit">Search</button>
+    </form>
+
 
     <h3>List of Available Jobs</h3>
 
@@ -19,11 +27,8 @@
 
     <table border="1" style="width: 100%; text-align: left;">
         <tr style="background-color: powderblue">
-            <th>ID</th>
             <th>Job Title</th>
             <th>Company Name</th>
-            <th>Salary</th>
-            <th>Experience</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -32,12 +37,12 @@
             <td>1</td>
             <td><strong>Software Engineer</strong></td>
             <td>Google</td>
-            <td>20,000 EGP</td>
-            <td>3 Years</td>
-            <td style="color: green">Open</td>
+
             <td>
-                <a href="Link">View Details</a> |
+                <a href="http://127.0.0.1:5500/JobDetails.html">View Details</a> |
                 <a href="Link">Apply</a>
+                <a href="Link">View Details</a> |
+                <button type="button" onclick="applyForJob(1)">Apply</button>
             </td>
         </tr>
 
@@ -45,12 +50,11 @@
             <td>2</td>
             <td><strong>Data Analyst</strong></td>
             <td>Vodafone</td>
-            <td>15,000 EGP</td>
-            <td>1 Year</td>
-            <td style="color: green">Open</td>
+
             <td>
+                <a href="http://127.0.0.1:5500/JobDetails.html">View Details</a> |
                 <a href="Link">View Details</a> |
-                <a href="Link">Apply</a>
+                <button type="button" onclick="applyForJob(1)">Apply</button>
             </td>
         </tr>
     </table>
