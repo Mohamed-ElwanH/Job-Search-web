@@ -1,15 +1,15 @@
-﻿x
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
-    <title>Admin Panel</title>
+    <title>Company Jobs - Admin Panel</title>
+    <link rel="stylesheet" href="AdminMain.css" />
 </head>
 
 <body>
 
-    <h2 style="color: cadetblue">Job Search - Company Admin Panel</h2>
-    <p>
+    <h1>Job Search - Company Admin Panel</h1>
+    <p id="line">
         <a href="Index.html">Home</a> |
 
         <a href="AddJob.html">Add New Job</a> |
@@ -18,12 +18,28 @@
         <a href="Home.html">Logout</a>
     </p>
     <hr>
-    <h3>Jobs Created by My Company</h3>
 
-    <p>Manage your company's job listings below.</p>
+    <div class="search-container">
+        <form action="Link1">
+            <label for="search1">SEARCH BY NAME :</label>
+            <input type="search" placeholder="EX: Web developer..." id="search1" name="search1">
+            <button type="submit">Search</button>
+        </form>
 
-    <table border="1" style=" width: 100%; text-align: left; background-color: white;">
-        <tr style="background-color: lightgray">
+        <form action="Link2">
+            <label for="search2">SEARCH BY ID :</label>
+            <input type="search" placeholder="EX: 101..." id="search2" name="search2">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <h2>Jobs Created by My Company</h2>
+
+    <h3>Manage your company's job listings below.</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
             <th>Job Title</th>
             <th>Company Name</th>
             <th>Status</th>
@@ -31,16 +47,18 @@
         </tr>
 
         <tr>
+            <td>1</td>
             <td>Front-End Developer</td>
             <td>Tech Corp</td>
             <td>2 Years</td>
             <td>
-                <a href="EditJob.html">Edit</a>
+                <a href="EditJob.html">Edit</a> |
                 <a href="Link" style="color: red">Delete</a>
             </td>
         </tr>
 
         <tr>
+            <td>2</td>
             <td>Project Manager</td>
             <td>Tech Corp</td>
             <td>5 Years</td>
