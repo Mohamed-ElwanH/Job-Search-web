@@ -1,12 +1,14 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html>
 <head>
     <title>Available Jobs</title>
+    <link rel="stylesheet" href="UserMain.css" />
 </head>
 <body>
 
-    <h2 style="color: darkblue;">Job Search Website</h2>
-    <p>
+    <h1>Job Search Website</h1>
+    <p id="topp">
 
         <a href="Index.html">Home</a> |
         <a href="AppliedJobs.html">My Applications</a> |
@@ -14,19 +16,20 @@
         <a href="Home.html">Logout</a>
     </p>
     <hr>
-    <form action="Link" >
-         <label for="search">Search For Jobs:</label>
-         <input type="search" id="search" name="search">
-         <button type="submit">Search</button>
+    <form action="Link">
+        <label for="search">Search For Jobs:</label>
+        <input type="search" placeholder="EX: Web developer..." id="search" name="search">
+        <button type="submit">Search</button>
     </form>
 
 
-    <h3>List of Available Jobs</h3>
+    <h2>List of Available Jobs</h2>
 
-    <p>Here you can browse and apply for open job opportunities.</p>
+    <h3>Here you can browse and apply for open job opportunities.</h3>
 
-    <table border="1" style="width: 100%; text-align: left;">
-        <tr style="background-color: powderblue">
+    <table>
+        <tr>
+            <th>ID</th>
             <th>Job Title</th>
             <th>Company Name</th>
             <th>Status</th>
@@ -37,6 +40,7 @@
             <td>1</td>
             <td><strong>Software Engineer</strong></td>
             <td>Google</td>
+            <td style="color: green">Open</td>
 
             <td>
                 <a href="JobDetails.html">View Details</a> |
@@ -48,6 +52,7 @@
             <td>2</td>
             <td><strong>Data Analyst</strong></td>
             <td>Vodafone</td>
+            <td style="color: red">closed</td>
 
             <td>
                 <a href="JobDetails.html">View Details</a> |
