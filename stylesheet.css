@@ -217,6 +217,7 @@ button {
     padding: 12px 28px;
     font-size: 16px;
     white-space: nowrap;
+    width:auto;
 }
 .card-top {
     display: flex;
@@ -289,7 +290,7 @@ button {
     width: 100%;
      box-sizing: border-box;
 }
-.centered-form h1 , h2 , h3 {
+.centered-form h1 , .centered-form h2 , .centered-form h3 {
     text-align: center;
     margin-bottom: 20px;
 }
