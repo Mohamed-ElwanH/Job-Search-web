@@ -1,65 +1,109 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Available Jobs</title>
-    <link rel="stylesheet" href="UserMain.css" />
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
 
-    <h1>Job Search Website</h1>
-    <p id="topp">
+    <header>
+        <h2>Job Search Website</h2>
 
-        <a href="Index.html">Home</a> |
-        <a href="AppliedJobs.html">My Applications</a> |
+        <nav>
+            <a href="Index.html">Home</a> |
+            <a href="AppliedJobs.html">My Applications</a> |
+            <a href="Home.html">Logout</a>
 
-        <a href="Home.html">Logout</a>
-    </p>
-    <hr>
-    <form action="Link">
-        <label for="search">Search For Jobs:</label>
-        <input type="search" placeholder="EX: Web developer..." id="search" name="search">
-        <button type="submit">Search</button>
-    </form>
+        </nav>
+
+    </header>
+
+    <div class="main-content">
+        <form class="search-form" action="Link">
+            <input type="search" id="search" name="search" placeholder="Search For Jobs...">
+            <button type="submit">Search</button>
+        </form>
 
 
-    <h2>List of Available Jobs</h2>
+        <div class="cards">
 
-    <h3>Here you can browse and apply for open job opportunities.</h3>
+            <div class="card">
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Job Title</th>
-            <th>Company Name</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
+                <div class="card-top">
+                    <div>
+                        <h5 class="card-title">Job Title</h5>
+                        <p class="card-text">Company Name</p>
+                        <p class="card-text">Location</p>
+                    </div>
+                    <span class="badge open">Open</span>
+                </div>
 
-        <tr>
-            <td>1</td>
-            <td><strong>Software Engineer</strong></td>
-            <td>Google</td>
-            <td style="color: green">Open</td>
+                <hr>
 
-            <td>
-                <a href="JobDetails.html">View Details</a> |
-                <button type="button" onclick="applyForJob(1)">Apply</button>
-            </td>
-        </tr>
+                <div class="card-details">
+                    <div>
+                        <small>Job ID</small>
+                        <p>1</p>
+                    </div>
+                    <div>
+                        <small>Salary</small>
+                        <p>10,000 EGP</p>
+                    </div>
+                    <div>
+                        <small>Experience</small>
+                        <p>2 years</p>
+                    </div>
+                </div>
 
-        <tr>
-            <td>2</td>
-            <td><strong>Data Analyst</strong></td>
-            <td>Vodafone</td>
-            <td style="color: red">closed</td>
+                <hr>
 
-            <td>
-                <a href="JobDetails.html">View Details</a> |
-                <button type="button" onclick="applyForJob(1)">Apply</button>
-            </td>
-        </tr>
-    </table>
+                <div class="card-actions">
+                    <a href="JobDetails.html">View Details</a>
+                    <button type="button" onclick="applyForJob(this)">Apply</button>
+                </div>
 
+            </div>
+            <div class="card">
+
+                <div class="card-top">
+                    <div>
+                        <h5 class="card-title">Job Title</h5>
+                        <p class="card-text">Company Name</p>
+                        <p class="card-text">Location</p>
+                    </div>
+                    <span class="badge closed">Closed</span>
+                </div>
+
+                <hr>
+
+                <div class="card-details">
+                    <div>
+                        <small>Job ID</small>
+                        <p>2</p>
+                    </div>
+                    <div>
+                        <small>Salary</small>
+                        <p>18,000 EGP</p>
+                    </div>
+                    <div>
+                        <small>Experience</small>
+                        <p>5 years</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="card-actions">
+                    <a href="JobDetails.html">View Details</a>
+                    <button type="button" onclick="applyForJob(1)">Apply</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
