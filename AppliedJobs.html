@@ -2,35 +2,64 @@
 <html>
 <head>
     <title>Applied Jobs</title>
+    <link rel="stylesheet"  href="stylesheet.css">
 </head>
 
 <body>
-    <h2 style="color: darkblue;">Job Search Website</h2>
-    <p>
-        <a href="Index.html">Home</a> |
-        <a href="UserMain.html">Available Jobs</a> |
-        <a href="Home.html">Logout</a> |
-    </p>
+     <header>
+    <h2>Job Search Website</h2>
+    
+        <nav>
+            <a href="Index.html">Home</a> |
+            <a href="UserMain.html">Available Jobs</a> |
+            <a href="Home.html">Logout</a>
+
+        </nav>
+     </header>
+
     <hr>
-    <form action="Link" >
-         <label for="search">Search For Jobs:</label>
-         <input type="search" id="search" name="search">
-         <button type="submit">Search</button>
-    </form>
-    <h1>Applied Jobs</h1>
-    <p>Here you can view the jobs you have applied for.</p>
-   
-     <table border="1" style="width: 100%; text-align: left;">
-        <tr style="background-color: powderblue">
-            <th>ID</th>
-            <th>Job Title</th>
-            <th>Company Name</th>
-            <th>Salary</th>
-            <th>Experience</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </table>
+
+   <div class="main-content">
+    <h1>My Applications</h1>
+    <div class="cards">
+
+   <div class="card">
+
+    <div class="card-top">
+        <div>
+            <h5 class="card-title">Job Title</h5>
+            <p class="card-text">Company Name</p>
+            <p class="card-text">Location</p>
+        </div>
+        <span class="badge open">Open</span>
+    </div>
+
+    <hr>
+
+    <div class="card-details">
+        <div>
+            <small>Job ID</small>
+            <p>1</p>
+        </div>
+        <div>
+            <small>Salary</small>
+            <p>10,000 EGP</p>
+        </div>
+        <div>
+            <small>Experience</small>
+            <p>2 years</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="card-actions">
+        <a href="JobDetails.html">View Details</a>
+         <button type="button" onclick="applyForJob(1)">Withdraw</button>
+    </div>
+
+</div>
+   </div>
 </body>
 
 </html>

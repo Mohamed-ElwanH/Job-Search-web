@@ -2,10 +2,13 @@
 <html>
 <head>
     <title>Edit Job</title>
+    <link rel="stylesheet"  href="stylesheet.css">
 </head>
 <body>
+    <div class="main-content">
+        <div class="centered-form">
 
-    <h2 style="color: rgb(58, 167, 171);">Edit Job Details</h2>
+    <h2>Edit Job Details</h2>
     <hr>
 
     <form action="AdminMain.html" method="get">
@@ -31,8 +34,8 @@
         <label for="description">Description:</label><br>
         <textarea id="description" name="description" rows="4" cols="50" placeholder="enter the job description..."></textarea><br><br>
 
-        <input type="submit" value="Save">
-        <a href="AdminMain.html">Cancel</a>
+        <button type="submit">Save Changes</button>
+        <a href="AdminMain.html" class = "cancel"> Cancel</a>
 
     </form>
 

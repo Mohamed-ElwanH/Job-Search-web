@@ -3,26 +3,28 @@
 
 <head>
     <title>Company Jobs - Admin Panel</title>
+    <link rel="stylesheet"  href="stylesheet.css">
 </head>
 
 <body>
-
-    <h2 style="color: cadetblue">Job Search - Company Admin Panel</h2>
-    <p>
+    <header>
+         <h2> job Search - Company Admin Panel </h2>
+        <nav>
         <a href="Index.html">Home</a> |
-
         <a href="AddJob.html">Add New Job</a> |
-
         <a href="UserMain.html">Available Jobs</a> |
         <a href="Home.html">Logout</a> 
-    </p>
-    <hr>
+        </nav>
+
+    </header>
+
+   
     <h3>Jobs Created by My Company</h3>
 
     <p>Manage your company's job listings below.</p>
 
-    <table border="1" style=" width: 100%; text-align: left; background-color: white;">
-        <tr style="background-color: lightgray">
+    <table>
+        <tr>
             <th>Job Title</th>
             <th>Company Name</th>
             <th>Status</th>
@@ -34,8 +36,8 @@
             <td>Tech Corp</td>
             <td>2 Years</td>
             <td>
-                <a href="EditJob.html">Edit</a>
-                <a href="Link" style="color: red">Delete</a>
+                <a href="EditJob.html">Edit</a> |
+                <button class="delete-btn" onclick="deleteJob(1)">Delete</button>
             </td>
         </tr>
 
@@ -45,7 +47,7 @@
             <td>5 Years</td>
             <td>
                 <a href="EditJob.html">Edit</a> |
-                <a href="Link" style="color: red">Delete</a>
+                <button class="delete-btn" onclick="deleteJob(1)">Delete</button>
             </td>
         </tr>
     </table>
