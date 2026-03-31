@@ -19,17 +19,19 @@ if (submitBtn) {
 if (jobContainer) {
     jobs.forEach(function (job) {
         jobContainer.innerHTML += `
-        <p style="font-size: 25px;">Title: ${job.jobTitle}</p>
-            <ul>
-        <li style="font-size: 25px;">Id: ${job.jobId}</li>
-        <li style="font-size: 25px;">Salary: ${job.salary}$</li>
-        <li style="font-size: 25px;">Experience: ${job.experience} years</li>
-        <li style="font-size: 25px;">Status: ${job.status}</li>
-        <li style="font-size: 25px;">Description: ${job.description}<pre></li>
-
-
-        </ul>
         <hr>
+    <div class="card-details">
+        <div>
+            <small>Job ID</small>
+            <p>1</p>
+        </div>
+        <div>
+            <small>Salary</small>
+            <p>10,000 EGP</p>
+        </div>
+    </div>
+
+    <hr>
         `
     })
 }
