@@ -121,14 +121,13 @@ th, td {
     text-align: left;
 }
 
-tr:first-child {
+thead tr {
     background-color: var(--table_header) !important;
 }
 
-tr:first-child th {
+thead tr th {
     color: var(--page_background);
 }
-
 tr {
     background-color: var(--page_background);
 }

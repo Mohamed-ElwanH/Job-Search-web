@@ -24,34 +24,17 @@
     <p>Manage your company's job listings below.</p>
 
     <table>
-        <tr>
-            <th>Job Title</th>
-            <th>Company Name</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-
-        <tr>
-            <td>Front-End Developer</td>
-            <td>Tech Corp</td>
-            <td>2 Years</td>
-            <td>
-                <a href="EditJob.html">Edit</a> |
-                <button class="delete-btn" onclick="deleteJob(1)">Delete</button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Project Manager</td>
-            <td>Tech Corp</td>
-            <td>5 Years</td>
-            <td>
-                <a href="EditJob.html">Edit</a> |
-                <button class="delete-btn" onclick="deleteJob(1)">Delete</button>
-            </td>
-        </tr>
+                <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="adminJobContainer"></tbody>
     </table>
-
+<script src="JobDetails.js"></script>
 </body>
 
 </html>
