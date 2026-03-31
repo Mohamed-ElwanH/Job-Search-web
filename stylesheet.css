@@ -219,6 +219,17 @@ button {
     white-space: nowrap;
     width:auto;
 }
+.logButton{
+      border-radius: 999px;
+    padding: 12px 28px;
+    font-size: 50px;
+    white-space: nowrap;
+    width: 70%;
+
+    display: block;
+    margin: 0 auto;
+
+}
 .card-top {
     display: flex;
     justify-content: space-between;
@@ -309,3 +320,4 @@ input[type="radio"] {
     margin-top: 10px;
 
 }
+
