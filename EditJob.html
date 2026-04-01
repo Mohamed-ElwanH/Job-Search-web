@@ -4,6 +4,7 @@
     <title>Edit Job</title>
     <link rel="stylesheet"  href="stylesheet.css">
 </head>
+
 <body>
     <div class="main-content">
         <div class="centered-form">
@@ -25,6 +26,8 @@
         <label for="experience">Experience:</label><br>
         <input type="text" id="experience" name="experience" placeholder="enter the experience..."><br><br>
 
+        <label for="location">Location:</label><br>
+        <input type="text" id="location" name="location" placeholder="enter the location..."><br><br>
         <label for="status">Status:</label><br>
         <select id="status" name="status">
             <option value="Open">Open</option>
@@ -34,10 +37,45 @@
         <label for="description">Description:</label><br>
         <textarea id="description" name="description" rows="4" cols="50" placeholder="enter the job description..."></textarea><br><br>
 
-        <button type="submit">Save Changes</button>
+        <button type="button" id="saveBtn">Save Changes</button>
         <a href="AdminMain.html" class = "cancel"> Cancel</a>
 
     </form>
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get("id");
+    const jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+    const jobIndex = jobs.findIndex(j => j.jobId === jobId);
+
+    if (jobIndex !== -1) {
+        const job = jobs[jobIndex];
+        document.getElementById("jobTitle").value = job.jobTitle;
+        document.getElementById("companyName").value = job.companyName;
+        document.getElementById("salary").value = job.salary;
+        document.getElementById("experience").value = job.experience;
+        document.getElementById("location").value = job.location || "";
+        document.getElementById("status").value = job.status;
+        document.getElementById("description").value = job.description;
+    }
+
+    document.getElementById("saveBtn").onclick = function (e) {
+        e.preventDefault();
+        if (jobIndex === -1) return;
+        jobs[jobIndex] = {
+            ...jobs[jobIndex],
+            jobTitle: document.getElementById("jobTitle").value.trim(),
+            companyName: document.getElementById("companyName").value.trim(),
+            salary: document.getElementById("salary").value.trim(),
+            experience: document.getElementById("experience").value.trim(),
+            location: document.getElementById("location").value.trim(),
+            status: document.getElementById("status").value,
+            description: document.getElementById("description").value.trim(),
+        };
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        alert("Job updated successfully!");
+        window.location.href = "AdminMain.html";
+    };
+</script>
 
 </body>
 </html>

@@ -7,11 +7,23 @@ function applyForJob(btn) {
         return;
     }
 
-    let jobId = card.querySelectorAll('.card-details p')[0].innerText;
+    let jobId = card.querySelectorAll('.card-details p')[0].innerText.trim();
 
-    badge.innerText = "Closed";
-    badge.classList.remove('open');
-    badge.classList.add('closed');
+    
+    let allJobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+    let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
+
+    let alreadyApplied = appliedJobs.find(j => j.jobId === jobId);
+    if (alreadyApplied) {
+        alert("You have already applied for this job!");
+        return;
+    }
+
+    let jobToApply = allJobs.find(j => j.jobId === jobId);
+    if (jobToApply) {
+        appliedJobs.push(jobToApply);
+        localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
+    }
 
     alert("Successfully applied for job ID: " + jobId + "\nGood luck!");
 }
@@ -22,6 +34,10 @@ function deleteJob(btn) {
 
     let confirmDelete = confirm("Are you sure you want to delete: " + jobTitle + "?");
     if (confirmDelete) {
+        let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+        let jobId = row.getAttribute('data-id');
+        jobs = jobs.filter(job => job.jobId !== jobId);
+        localStorage.setItem("jobs", JSON.stringify(jobs));
         row.remove();
     }
 }
@@ -48,3 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+function withdrawJob(btn) {
+    let jobId = btn.getAttribute("data-id");
+    let confirmWithdraw = confirm("Are you sure you want to withdraw this application?");
+    if (confirmWithdraw) {
+        let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
+        appliedJobs = appliedJobs.filter(j => j.jobId !== jobId);
+        localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
+        btn.closest('.card').remove();
+    }
+}

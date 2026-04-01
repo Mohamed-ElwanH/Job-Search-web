@@ -36,8 +36,7 @@ if (jobContainer) {
             <p class="card-text">Company Name: ${job.companyName}</p>
 
         </div>
-        <span class="badge open">${job.status}</span>
-    </div>
+<span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>    </div>
 
     <hr>
 
@@ -64,7 +63,7 @@ if (jobContainer) {
 
     <div class="card-actions">
         <a href="JobDetails.html">View Details</a>
-        <button type="button" onclick="applyForJob(1)">Apply</button>
+        <button type="button" onclick="applyForJob(this)">Apply</button>
     </div>
 
 </div>
@@ -80,8 +79,8 @@ if (userJobContainer) {
         <div>
             <h5 class="card-title">${job.jobTitle}</h5>
         </div>
-        <span class="badge open">${job.status}</span>
-    </div>
+<span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>    
+</div>
 
     <hr>
 
@@ -95,7 +94,7 @@ if (userJobContainer) {
 
     <div class="card-actions">
         <a href="JobDetails.html">View Details</a>
-        <button type="button" onclick="applyForJob(1)">Apply</button>
+        <button type="button" onclick="applyForJob(this)">Apply</button>
     </div>
 
 </div>
@@ -105,14 +104,47 @@ if (userJobContainer) {
 if (adminJobContainer) {
     jobs.forEach(function (job) {
         adminJobContainer.innerHTML += `
-        <tr>
+        <tr data-id="${job.jobId}">
             <td>${job.jobTitle}</td>
             <td>${job.companyName}</td>
             <td>${job.status}</td>
             <td>
-                <a href="EditJob.html">Edit</a> |
-                <button class="delete-btn" onclick="deleteJob(1)">Delete</button>
+                <a href="EditJob.html?id=${job.jobId}">Edit</a>
+                <button class="delete-btn" onclick="deleteJob(this)">Delete</button>
             </td>
         </tr>`
     })
+}
+const container = document.getElementById("appliedJobsContainer");
+if (container) {
+    let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
+
+    if (appliedJobs.length === 0) {
+        container.innerHTML = "<p>You have not applied for any jobs yet.</p>";
+    } else {
+        appliedJobs.forEach(function(job) {
+            container.innerHTML += `
+            <div class="card">
+                <div class="card-top">
+                    <div>
+                        <h5 class="card-title">${job.jobTitle}</h5>
+                        <p class="card-text">${job.companyName}</p>
+                        <p class="card-text">${job.location}</p>
+                    </div>
+                   <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
+                </div>
+                <hr>
+                <div class="card-details">
+                    <div><small>Job ID</small><p>${job.jobId}</p></div>
+                    <div><small>Salary</small><p>${job.salary}</p></div>
+                    <div><small>Experience</small><p>${job.experience} years</p></div>
+                </div>
+                <hr>
+                <div class="card-actions">
+                    <button type="button" onclick="withdrawJob(this)" data-id="${job.jobId}">Withdraw</button>
+                </div>
+            </div>
+            `;
+        });
+    }
 }
