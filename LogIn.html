@@ -1,23 +1,30 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <title>Log-in</title>
-    <link rel="stylesheet"  href="stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-    <div class="main-content"> 
-        <div class = "centered-form">
-         <h1>Sign in</h1>
-         <form action="/submit" method="post">
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username"><br><br>
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password"><br><br>
-            <button class ="form-button" type="submit">Log In</button>
+    <div class="centered-form card">
+        <h1>Log in</h1>
+        <h2>Welcome to our Job Search website!</h2>
+        <p>Please enter your credentials to access your account :</p>
+
+        <form action="/submit" method="post">
+            <label for="email"><b>Email :</b></label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="password"><b>Password :</b></label>
+            <input type="password" id="password" name="password" required>
+
+            <span id="formError" class="error" aria-live="polite"></span>
+            <br /><br />
+            <button type="submit">Log In</button>
         </form>
-        <p>Don't have an account? <a href="SignUp.html">Sign up here</a>.</p> 
-         </div>
-     </div>
+        <br /><br />
+        <div class="small">Don't have an account? <a href="SignUp.html">Sign up here</a>.</div>
+    </div>
+    <script src="LogIn.js" defer></script>
 </body>
 </html>

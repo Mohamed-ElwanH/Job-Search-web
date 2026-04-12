@@ -128,6 +128,14 @@ thead tr {
 thead tr th {
     color: var(--page_background);
 }
+tr:first-child {
+    background-color: var(--table_header) !important;
+}
+
+tr:first-child th {
+    color: var(--page_background);
+}
+
 tr {
     background-color: var(--page_background);
 }
