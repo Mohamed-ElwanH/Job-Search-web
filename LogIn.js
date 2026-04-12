@@ -1,17 +1,10 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
-    const username = document.getElementById('username');
+    const username = document.getElementById('email');
     const password = document.getElementById('password');
     const formError = document.getElementById('formError');
 
-    const adminEmails = new Set([
-        '20242265@stud.fci-cu.edu.eg',
-        '20240549@stud.fci-cu.edu.eg',
-        '20242399@stud.fci-cu.edu.eg',
-        '20242080@stud.fci-cu.edu.eg',
-        '20240710@stud.fci-cu.edu.eg',
-        '20240326@stud.fci-cu.edu.eg'
-    ]);
+
 
     function validateRequiredFields() {
         if (!username || !password || !formError)
@@ -39,12 +32,8 @@
                 return;
             }
 
-            const val = (username.value || '').trim().toLowerCase();
-            if (adminEmails.has(val)) {
-                window.location.href = 'AdminMain.html';
-            } else {
-                window.location.href = 'UserMain.html';
-            }
+           const isAdmin = localStorage.getItem('is_admin') === 'true';
+            window.location.href = isAdmin ? 'AdminMain.html' : 'UserMain.html';
         });
     }
 });

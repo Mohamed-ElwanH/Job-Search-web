@@ -40,10 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateAdminFlag() {
-        if (!isAdminInput || !email)
-            return;
-        const val = (email.value || '').trim().toLowerCase();
-        isAdminInput.value = adminEmails.has(val) ? 'true' : 'false';
+       const isAdmin = document.getElementById('admin_checkbox').checked;
+        localStorage.setItem('is_admin', isAdmin ? 'true' : 'false');
     }
 
     if (username)
