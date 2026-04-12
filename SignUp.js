@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateAdminFlag() {
-       const isAdmin = document.getElementById('admin_checkbox').checked;
-        localStorage.setItem('is_admin', isAdmin ? 'true' : 'false');
-    }
+    const isAdmin = document.getElementById('admin_checkbox').checked;
+    localStorage.setItem('is_admin', isAdmin ? 'true' : 'false');
+}
 
     if (username)
         username.addEventListener('input', validateRequiredFields);
@@ -46,19 +46,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (form) {
         form.addEventListener('submit', function (e) {
-            updateAdminFlag();
-            const okRequired = validateRequiredFields();
-            const okPasswords = validatePasswords();
-            if (!okRequired || !okPasswords) {
-                e.preventDefault();
-                if (!okRequired) {
-                    if (username && !username.value.trim()) username.focus();
-                    else if (email && !email.value.trim()) email.focus();
-                    else if (password && !password.value) password.focus();
-                } else {
-                    confirm.focus();
-                }
-            }
-        });
+    e.preventDefault();
+    const okRequired = validateRequiredFields();
+    const okPasswords = validatePasswords();
+    if (!okRequired || !okPasswords) return;
+
+    const isAdmin = document.getElementById('admin_checkbox').checked;
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+    if (users.find(u => u.email === email.value.trim())) {
+        formError.textContent = 'An account with this email already exists.';
+        return;
+    }
+
+    users.push({
+        username: username.value.trim(),
+        email: email.value.trim(),
+        password: password.value,
+        isAdmin: isAdmin
+    });
+    localStorage.setItem('users', JSON.stringify(users));
+    window.location.href = 'LogIn.html';
+});
     }
 });

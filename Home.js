@@ -4,7 +4,7 @@ const authLink = document.getElementById('authLink');
 const applicationsLink = document.getElementById('applicationsLink');
 
 if (isLoggedIn) {
-    
+    authLink.innerHTML = '<a href="Index.html">Logout</a>';
     if (isAdmin) {
         applicationsLink.innerHTML = '<a href="AdminMain.html">Manage Jobs</a> | ';
     } else {

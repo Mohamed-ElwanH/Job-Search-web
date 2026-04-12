@@ -24,16 +24,19 @@
 
     if (form) {
         form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!validateRequiredFields()) return;
 
-            e.preventDefault();
-            if (!validateRequiredFields()) {
-                if (username && !username.value.trim()) username.focus();
-                else if (password && !password.value) password.focus();
-                return;
-            }
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const match = users.find(u => u.email === username.value.trim() && u.password === password.value);
 
-           const isAdmin = localStorage.getItem('is_admin') === 'true';
-            window.location.href = isAdmin ? 'AdminMain.html' : 'UserMain.html';
-        });
+    if (!match) {
+        formError.textContent = 'Invalid email or password.';
+        return;
+    }
+
+    localStorage.setItem('is_admin', match.isAdmin ? 'true' : 'false');
+    window.location.href = match.isAdmin ? 'AdminMain.html' : 'UserMain.html';
+});
     }
 });

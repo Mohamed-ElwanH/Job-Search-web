@@ -19,8 +19,20 @@ if (submitBtn) {
         const experience = document.getElementById("experience").value.trim();
         const description = document.getElementById("description").value.trim();
         const location = document.getElementById("location").value.trim();
-        const job = { jobTitle, jobId, companyName, salary, status, experience, description, location };
         let jobDisplay = getJobs();
+        if (!jobTitle || !jobId || !companyName || !salary || !experience || !description || !location) {
+            alert("Please fill in all fields.");
+            return;
+        }
+        if (!status) {
+            alert("Please select a job status.");
+            return;
+        }
+        if (jobDisplay.find(j => j.jobId === jobId)) {
+            alert("A job with this ID already exists. Please use a unique ID.");
+            return;
+        }
+        const job = { jobTitle, jobId, companyName, salary, status, experience, description, location };
         jobDisplay.push(job);
         localStorage.setItem("jobs", JSON.stringify(jobDisplay));
         alert("Job added successfully!");
@@ -58,9 +70,18 @@ if (jobContainer) {
                 <div><small>Description</small><p>${job.description}</p></div>
                 <hr>
                 <div class="card-actions">
-                    <button type="button" onclick="applyForJob(this)">Apply</button>
-                    <a href="UserMain.html">Back to Jobs</a>
-                </div>
+    ${localStorage.getItem('is_admin') === 'true'
+        ? `<button type="button" class="delete-btn" onclick="(function(){
+            if(confirm('Are you sure you want to delete this job?')){
+                let jobs = JSON.parse(localStorage.getItem('jobs')||'[]');
+                jobs = jobs.filter(j => j.jobId !== '${job.jobId}');
+                localStorage.setItem('jobs', JSON.stringify(jobs));
+                window.location.href = 'AdminMain.html';
+            }
+        })()">Delete</button>`
+        : `<button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>`}
+    <a href="UserMain.html">Back to Jobs</a>
+</div>
             </div>`;
         }
     } else {
@@ -82,8 +103,8 @@ if (jobContainer) {
                 </div>
                 <hr>
                 <div class="card-actions">
-                    <a href="JobDetails.html?id=${job.jobId}">View Details</a>
-                    <button type="button" onclick="applyForJob(this)">Apply</button>
+                    <button type="button" onclick="viewDetails('${job.jobId}')">View Details</button>
+                    <button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>
                 </div>
             </div>`;
         });
@@ -109,8 +130,8 @@ if (userJobContainer) {
             </div>
             <hr>
             <div class="card-actions">
-                <a href="JobDetails.html?id=${job.jobId}">View Details</a>
-                <button type="button" onclick="applyForJob(this)">Apply</button>
+                <button type="button" onclick="viewDetails('${job.jobId}')">View Details</button>
+                <button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>
             </div>
         </div>`;
     });
@@ -120,14 +141,15 @@ if (adminJobContainer) {
     jobs.forEach(function (job) {
         adminJobContainer.innerHTML += `
         <tr data-id="${job.jobId}">
-            <td>${job.jobTitle}</td>
-            <td>${job.companyName}</td>
-            <td>${job.status}</td>
-            <td>
-                <a href="EditJob.html?id=${job.jobId}">Edit</a>
-                <button class="delete-btn" onclick="deleteJob(this)">Delete</button>
-            </td>
-        </tr>`;
+    <td>${job.jobId}</td>
+    <td>${job.jobTitle}</td>
+    <td>${job.companyName}</td>
+    <td>${job.status}</td>
+    <td>
+        <a href="EditJob.html?id=${job.jobId}">Edit</a>
+        <button class="delete-btn" onclick="deleteJob(this)">Delete</button>
+    </td>
+</tr>`;
     });
 }
 
