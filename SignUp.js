@@ -6,16 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirm = document.getElementById('confirm_password');
     const pwError = document.getElementById('pwError');
     const formError = document.getElementById('formError');
-    const isAdminInput = document.getElementById('is_admin');
-
-    const adminEmails = new Set([
-        '20242265@stud.fci-cu.edu.eg',
-        '20240549@stud.fci-cu.edu.eg',
-        '20242399@stud.fci-cu.edu.eg',
-        '20242080@stud.fci-cu.edu.eg',
-        '20240710@stud.fci-cu.edu.eg',
-        '20240326@stud.fci-cu.edu.eg'
-    ]);
+ 
 
     function validatePasswords() {
         if (!password || !confirm || !pwError)

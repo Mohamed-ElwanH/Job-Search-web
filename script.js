@@ -1,4 +1,9 @@
 function applyForJob(btn) {
+     const isLoggedIn = localStorage.getItem('is_admin') !== null;
+    if (!isLoggedIn) {
+        window.location.href = 'LogIn.html';
+        return;
+    }
     let card = btn.closest('.card');
     let badge = card.querySelector('.badge');
 
