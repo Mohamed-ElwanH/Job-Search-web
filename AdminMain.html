@@ -3,53 +3,39 @@
 
 <head>
     <title>Company Jobs - Admin Panel</title>
+    <link rel="stylesheet"  href="stylesheet.css">
 </head>
 
 <body>
-
-    <h2 style="color: cadetblue">Job Search - Company Admin Panel</h2>
-    <p>
-        <a href="Index.html">Home</a> |
-
+    <header>
+         <h2> Linked Out - Company Admin Panel </h2>
+        <nav>
+        <a href="Home.html">Home</a> |
         <a href="AddJob.html">Add New Job</a> |
+        <a href="Index.html">Logout</a> 
+        </nav>
 
-        <a href="UserMain.html">Available Jobs</a> |
-        <a href="Home.html">Logout</a> 
-    </p>
-    <hr>
+    </header>
+
+   
     <h3>Jobs Created by My Company</h3>
 
     <p>Manage your company's job listings below.</p>
 
-    <table border="1" style=" width: 100%; text-align: left; background-color: white;">
-        <tr style="background-color: lightgray">
-            <th>Job Title</th>
-            <th>Company Name</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-
-        <tr>
-            <td>Front-End Developer</td>
-            <td>Tech Corp</td>
-            <td>2 Years</td>
-            <td>
-                <a href="EditJob.html">Edit</a>
-                <a href="Link" style="color: red">Delete</a>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Project Manager</td>
-            <td>Tech Corp</td>
-            <td>5 Years</td>
-            <td>
-                <a href="EditJob.html">Edit</a> |
-                <a href="Link" style="color: red">Delete</a>
-            </td>
-        </tr>
+    <table>
+                <thead>
+            <tr>
+                <th>ID</th>
+                <th>Job Title</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="adminJobContainer"></tbody>
     </table>
-
+<script src="JobDetails.js"></script>
+<script src="script.js"></script>
 </body>
 
 </html>

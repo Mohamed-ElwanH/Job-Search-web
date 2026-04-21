@@ -2,35 +2,37 @@
 <html>
 <head>
     <title>Applied Jobs</title>
+    <link rel="stylesheet"  href="stylesheet.css">
 </head>
 
 <body>
-    <h2 style="color: darkblue;">Job Search Website</h2>
-    <p>
-        <a href="Index.html">Home</a> |
-        <a href="UserMain.html">Available Jobs</a> |
-        <a href="Home.html">Logout</a> |
-    </p>
+     <header>
+    <h2> Linked Out</h2>
+    
+        <nav>
+            <a href="Home.html">Home</a> |
+            <a href="UserMain.html">Available Jobs</a> |
+            <a href="Index.html">Logout</a>
+
+        </nav>
+     </header>
+
     <hr>
-    <form action="Link" >
-         <label for="search">Search For Jobs:</label>
-         <input type="search" id="search" name="search">
-         <button type="submit">Search</button>
-    </form>
-    <h1>Applied Jobs</h1>
-    <p>Here you can view the jobs you have applied for.</p>
+
+   <div class="main-content">
+    <h1>My Applications</h1>
    
-     <table border="1" style="width: 100%; text-align: left;">
-        <tr style="background-color: powderblue">
-            <th>ID</th>
-            <th>Job Title</th>
-            <th>Company Name</th>
-            <th>Salary</th>
-            <th>Experience</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </table>
+
+    <div class="cards">
+    <div id="appliedJobsContainer"></div>
+    </div>
+
+
+
+</div>
+   </div>
+   <script src="JobDetails.js"></script>
+<script src="script.js"></script>
 </body>
 
 </html>
