@@ -3,8 +3,13 @@ const isAdmin = localStorage.getItem('is_admin') === 'true';
 const authLink = document.getElementById('authLink');
 const applicationsLink = document.getElementById('applicationsLink');
 
+function logout() {
+    localStorage.removeItem('is_admin');
+    window.location.href = 'Index.html';
+}
+
 if (isLoggedIn) {
-    authLink.innerHTML = '<a href="Index.html">Logout</a>';
+    authLink.innerHTML = '<a href="#" onclick="logout()">Logout</a>';
     if (isAdmin) {
         applicationsLink.innerHTML = '<a href="AdminMain.html">Manage Jobs</a> | ';
     } else {
