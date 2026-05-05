@@ -5,17 +5,17 @@ const applicationsLink = document.getElementById('applicationsLink');
 
 function logout() {
     localStorage.removeItem('is_admin');
-    window.location.href = 'Index.html';
+    window.location.href = '/index/';
 }
 
 if (isLoggedIn) {
     authLink.innerHTML = '<a href="#" onclick="logout()">Logout</a>';
     if (isAdmin) {
-        applicationsLink.innerHTML = '<a href="AdminMain.html">Manage Jobs</a> | ';
+        applicationsLink.innerHTML = '<a href="/admin-main/">Manage Jobs</a> | ';
     } else {
-        applicationsLink.innerHTML = '<a href="AppliedJobs.html">My Applications</a> | <a href="UserMain.html">Available Jobs</a> | ';
+        applicationsLink.innerHTML = '<a href="/applied-jobs/">My Applications</a> | <a href="/user-main/">Available Jobs</a> | ';
     }
 } else {
-    authLink.innerHTML = '<a href="LogIn.html">Sign in</a>';
+    authLink.innerHTML = '<a href="/login/">Sign in</a>';
     applicationsLink.innerHTML = '';
 }

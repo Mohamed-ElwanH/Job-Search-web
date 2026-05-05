@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Home</title>
-    <link rel="stylesheet" href="stylesheet.css">
-</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
 
 <header>
     <h2>Linked Out</h2>
@@ -59,7 +59,7 @@
     <div id="jobContainer" style="display: none;"></div>
 </div>
 </body>
-<script src="JobDetails.js"></script>
-<script src="script.js"></script>
-<script src="Home.js"></script>
+<script src="{% static 'JobDetails.js' %}"></script>
+<script src="{% static 'script.js' %}"></script>
+<script src="{% static 'Home.js' %}"></script>
 </html>

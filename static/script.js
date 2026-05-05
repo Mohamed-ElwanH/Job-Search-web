@@ -92,8 +92,8 @@ function withdrawJob(btn) {
 function viewDetails(jobId) {
     const isLoggedIn = localStorage.getItem('is_admin') !== null;
     if (!isLoggedIn) {
-        window.location.href = 'SignUp.html';
+    window.location.href = '/signup/';
         return;
     }
-    window.location.href = 'JobDetails.html?id=' + jobId;
+    window.location.href = '/job-details/?id=' + jobId;
 }

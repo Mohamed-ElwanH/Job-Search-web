@@ -3,18 +3,19 @@
 <head>
     <meta charset="utf-8" />
     <title>Sign-up</title>
-    <link rel="stylesheet" href="stylesheet.css">
-</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
 <body>
     <header>  <nav>
-    <a href="Home.html">Home</a> |
+    <a href="{% url 'home' %}">Home</a>
     </nav></header>
     <div class ="main-content">
     <div class="centered-form">
         <h1>Sign up</h1>
         <p>Here you can create an account to access our services. Please fill in the form below to get started:</p>
 
-        <form action="LogIn.html" method="get">
+      <form method="POST">
+{% csrf_token %}
             <label for="username"><b>Username:</b></label>
             <input type="text" id="username" name="username" maxlength="15" pattern="^[A-Za-z _]{1,15}$" title="Username must be 1-15 characters; only English letters, space and underscore are allowed." required><br><br>
             
@@ -37,8 +38,8 @@
             <button type="submit">Sign Up</button>
         </form>
         <br /><br />
-        <div class="small">Already have an account? <a href="LogIn.html">Log in here</a>.</div>
+        <div class="small">Already have an account? <a href="/login/">Log in here</a>.</div>
     </div>
-    <script src="SignUp.js" defer></script>
+    <script src="{% static 'SignUp.js' %}" defer></script>
 </body>
 </html>
