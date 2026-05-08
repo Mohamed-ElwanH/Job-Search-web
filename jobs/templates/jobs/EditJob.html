@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Edit Job</title>
-    <link rel="stylesheet"  href="stylesheet.css">
-</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
 
 <body>
     <div class="main-content">
@@ -12,7 +12,8 @@
     <h2>Edit Job Details</h2>
     <hr>
 
-    <form action="AdminMain.html" method="get">
+   <form method="POST">
+{% csrf_token %}
 
         <label for="jobTitle">Job Title:</label><br>
         <input type="text" id="jobTitle" name="jobTitle" placeholder="enter the job title..."><br><br>
@@ -38,8 +39,7 @@
         <textarea id="description" name="description" rows="4" cols="50" placeholder="enter the job description..."></textarea><br><br>
 
         <button type="button" id="saveBtn">Save Changes</button>
-        <a href="AdminMain.html" class = "cancel"> Cancel</a>
-
+<a href="{% url 'admin_main' %}">Cancel</a>
     </form>
     <script>
     const params = new URLSearchParams(window.location.search);
@@ -73,7 +73,7 @@
         };
         localStorage.setItem("jobs", JSON.stringify(jobs));
         alert("Job updated successfully!");
-        window.location.href = "AdminMain.html";
+        window.location.href = "{% url 'admin_main' %}";
     };
 </script>
 </div>

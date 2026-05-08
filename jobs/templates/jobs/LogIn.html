@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <title>Log-in</title>
-    <link rel="stylesheet" href="stylesheet.css">
-</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
 <body>
     <header>  <nav>
-    <a href="Home.html">Home</a> |
+    <a href="{% url 'home' %}">Home</a>
     </nav></header>
     <div class="main-content">
 
@@ -15,7 +15,8 @@
         <h1> Sign in</h1>
       
 
-        <form action="/submit" method="post">
+      <form method="POST">
+{% csrf_token %}
 
             <label for="email"><b>Email:</b></label> <br>
             <input type="text" id="email" name="email" required><br><br>
@@ -28,10 +29,10 @@
             <button type="submit">Log In</button>
         </form>
         <br /><br />
-        <div class="small">Don't have an account? <a href="SignUp.html">Sign up here</a>.</div>
+        <div class="small">Don't have an account? <a href="/signup/">Sign up here</a>.</div>
             
 
     </div>
-    <script src="LogIn.js" defer></script>
+    <script src="{% static 'LogIn.js' %}" defer></script>
 </body>
 </html>

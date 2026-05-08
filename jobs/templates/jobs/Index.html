@@ -2,13 +2,12 @@
 <html>
 <head>
     <title>Linked Out</title>
-    <link rel="stylesheet" href="stylesheet.css">
-</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
 <body>
     <header>
       <nav>
-    <a href="Home.html">Home</a> |
-    </nav>
+<a href="{% url 'home' %}">Home</a>    </nav>
     </header>
 
   <div class="main-content">
@@ -33,13 +32,13 @@
             <div class="auth-card">
                 <h2>Have an account?</h2>
                 <p>Sign in and start job hunting!</p>
-                <button class="logButton" onclick="window.location.href='LogIn.html'">Sign in</button>
+                <button class="logButton" onclick="window.location.href='/login/'">Sign in</button>
             </div>
 
             <div class="auth-card">
                 <h2>New here?</h2>
                 <p>Let's get you started!</p>
-                <button class="logButton" onclick="window.location.href='SignUp.html'">Sign up</button>
+                <button class="logButton" onclick="window.location.href='/signup/'">Sign up</button>
             </div>
         </div>
 
