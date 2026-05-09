@@ -15,15 +15,11 @@ class Job(models.Model):
     
     
 class Application(models.Model):
-    Job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True, blank=True)
     user_email = models.CharField(max_length=100)
     
     class Meta:
-        unique_together = ('Job', 'user_email')
+        unique_together = ('job', 'user_email')
     
     def __str__(self):
-        return f"{self.user_email} - {self.Job.jobTitle}"
-
-
-
-
+        return f"{self.user_email} - {self.job.jobTitle}"
