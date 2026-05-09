@@ -19,24 +19,21 @@ function applyForJob(btn) {
         return;
     }
 
-    let jobId = btn.getAttribute('data-id') || card.querySelectorAll('.card-details p')[0].innerText.trim();
+    let jobId = btn.getAttribute('data-id');
 
-    let allJobs = JSON.parse(localStorage.getItem("jobs") || "[]");
-    let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
-
-    let alreadyApplied = appliedJobs.find(j => j.jobId === jobId);
-    if (alreadyApplied) {
-        alert("You have already applied for this job!");
-        return;
-    }
-
-    let jobToApply = allJobs.find(j => j.jobId === jobId);
-    if (jobToApply) {
-        appliedJobs.push(jobToApply);
-        localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
-    }
-
-    alert("Successfully applied for job ID: " + jobId + "\nGood luck!");
+    fetch('/api/apply/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({ jobId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert("Successfully applied! Good luck!");
+        }
+    });
 }
 function deleteJob(btn) {
     let row = btn.closest('tr');
@@ -87,12 +84,15 @@ document.addEventListener("DOMContentLoaded", function () {
 function withdrawJob(btn) {
     let jobId = btn.getAttribute("data-id");
     let confirmWithdraw = confirm("Are you sure you want to withdraw this application?");
-    if (confirmWithdraw) {
-        let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
-        appliedJobs = appliedJobs.filter(j => j.jobId !== jobId);
-        localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
-        btn.closest('.card').remove();
-    }
+     fetch('/api/withdraw/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({ jobId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) btn.closest('.card').remove();
+    });
 }
 function viewDetails(jobId) {
     const isLoggedIn = localStorage.getItem('is_admin') !== null;

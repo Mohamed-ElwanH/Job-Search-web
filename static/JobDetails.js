@@ -155,33 +155,35 @@ if (adminJobContainer) {
 
 const container = document.getElementById("appliedJobsContainer");
 if (container) {
-    let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
-
-    if (appliedJobs.length === 0) {
-        container.innerHTML = "<p>You have not applied for any jobs yet.</p>";
-    } else {
-        appliedJobs.forEach(function (job) {
-            container.innerHTML += `
-            <div class="card">
-                <div class="card-top">
-                    <div>
-                        <h5 class="card-title">${job.jobTitle}</h5>
-                        <p class="card-text">${job.companyName}</p>
-                        <p class="card-text">${job.location}</p>
-                    </div>
-                    <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
-                </div>
-                <hr>
-                <div class="card-details">
-                    <div><small>Job ID</small><p>${job.jobId}</p></div>
-                    <div><small>Salary</small><p>${job.salary}</p></div>
-                    <div><small>Experience</small><p>${job.experience} years</p></div>
-                </div>
-                <hr>
-                <div class="card-actions">
-                    <button type="button" onclick="withdrawJob(this)" data-id="${job.jobId}">Withdraw</button>
-                </div>
-            </div>`;
+    fetch('/api/applied-jobs/')
+        .then(res => res.json())
+        .then(appliedJobs => {
+            if (appliedJobs.length === 0) {
+                container.innerHTML = "<p>You have not applied for any jobs yet.</p>";
+            } else {
+                appliedJobs.forEach(function(job) {
+                    container.innerHTML += `
+                    <div class="card">
+                        <div class="card-top">
+                            <div>
+                                <h5 class="card-title">${job.jobTitle}</h5>
+                                <p class="card-text">${job.companyName}</p>
+                                <p class="card-text">${job.location}</p>
+                            </div>
+                            <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
+                        </div>
+                        <hr>
+                        <div class="card-details">
+                            <div><small>Job ID</small><p>${job.jobId}</p></div>
+                            <div><small>Salary</small><p>${job.salary}</p></div>
+                            <div><small>Experience</small><p>${job.experience} years</p></div>
+                        </div>
+                        <hr>
+                        <div class="card-actions">
+                            <button type="button" onclick="withdrawJob(this)" data-id="${job.jobId}">Withdraw</button>
+                        </div>
+                    </div>`;
+                });
+            }
         });
-    }
 }
