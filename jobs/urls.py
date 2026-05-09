@@ -11,5 +11,8 @@ urlpatterns = [
     path('user-main/', views.user_main, name='user_main'),
     path('job-details/', views.job_details, name='job_details'),
     path('applied-jobs/', views.applied_jobs, name='applied_jobs'),
+    path('api/applied-jobs/', views.get_applied_jobs, name='get_applied_jobs'),
+    path('api/apply/', views.apply_job, name='apply_job'),
+    path('api/withdraw/', views.withdraw_application, name='withdraw_application'),
     path('edit-job/', views.edit_job, name='edit_job'),
 ]
