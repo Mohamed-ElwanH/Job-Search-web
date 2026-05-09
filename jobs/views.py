@@ -45,7 +45,7 @@ def withdraw_application(request):
         return JsonResponse({'message': 'Application withdrawn successfully.'}, status=200)     
 def applied_jobs(request):
     return render(request, 'jobs/AppliedJobs.html')
-def grt_applied_jobs(request):
+def get_applied_jobs(request):
     user_email = request.GET.get('user_email')
     applications = Application.objects.filter(user_email=user_email).select_related('Job')
     applied_jobs_data = [
