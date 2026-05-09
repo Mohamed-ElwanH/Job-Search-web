@@ -44,12 +44,10 @@ if (jobContainer) {
     const jobId = params.get("id");
 
     if (jobId) {
-        // show single job detail
-        const job = jobs.find(j => j.jobId === jobId);
-
-        if (!job) {
-            jobContainer.innerHTML = "<p>Job not found.</p>";
-        } else {
+        // FETCH single job from Django instead of localStorage
+        fetch(`/api/job/?id=${jobId}`)
+        .then(res => res.json())
+        .then(job => {
             jobContainer.innerHTML = `
             <div class="card">
                 <div class="card-top">
@@ -70,41 +68,8 @@ if (jobContainer) {
                 <div><small>Description</small><p>${job.description}</p></div>
                 <hr>
                 <div class="card-actions">
-    ${localStorage.getItem('is_admin') === 'true'
-        ? `<button type="button" class="delete-btn" onclick="(function(){
-            if(confirm('Are you sure you want to delete this job?')){
-                let jobs = JSON.parse(localStorage.getItem('jobs')||'[]');
-                jobs = jobs.filter(j => j.jobId !== '${job.jobId}');
-                localStorage.setItem('jobs', JSON.stringify(jobs));
-                window.location.href = 'AdminMain.html';
-            }
-        })()">Delete</button>`
-        : `<button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>`}
-    <a href="UserMain.html">Back to Jobs</a>
-</div>
-            </div>`;
-        }
-    } else {
-        // show all jobs
-        jobs.forEach(function (job) {
-            jobContainer.innerHTML += `
-            <div class="card">
-                <div class="card-top">
-                    <div>
-                        <h5 class="card-title">${job.jobTitle}</h5>
-                        <p class="card-text">Company Name: ${job.companyName}</p>
-                    </div>
-                    <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
-                </div>
-                <hr>
-                <div class="card-details">
-                    <div><small>ID</small><p>${job.jobId}</p></div>
-                    <div><small>Salary</small><p>${job.salary}</p></div>
-                </div>
-                <hr>
-                <div class="card-actions">
-                    <button type="button" onclick="viewDetails('${job.jobId}')">View Details</button>
                     <button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>
+                    <a href="/user-main/">Back to Jobs</a>
                 </div>
             </div>`;
         });
