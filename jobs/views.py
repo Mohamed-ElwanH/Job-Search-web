@@ -1,10 +1,9 @@
 import json
 from django.shortcuts import render, redirect
-from .models import Job
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
+from .models import Job
 
 def home(request):
     return render(request, 'jobs/Home.html')
@@ -35,17 +34,20 @@ def edit_job(request):
 
 def add_job(request):
     if request.method == 'POST':
+        data = json.loads(request.body)
+        if Job.objects.filter(jobId=data['jobId']).exists():
+            return JsonResponse({'error': 'Job with this ID already exists.'}, status=400)
         Job.objects.create(
-            jobId=request.POST['jobId'],
-            jobTitle=request.POST['jobTitle'],
-            companyName=request.POST['companyName'],
-            salary=request.POST['salary'],
-            experience=request.POST['experience'],
-            location=request.POST['location'],
-            status=request.POST['status'],
-            description=request.POST['description'],
+            jobId=data['jobId'],
+            jobTitle=data['jobTitle'],
+            companyName=data['companyName'],
+            salary=data['salary'],
+            experience=data['experience'],
+            location=data['location'],
+            status=data['status'],
+            description=data['description'],
         )
-        return redirect('add_job')
+        return JsonResponse({'message': 'Job added successfully.'}, status=201)
     return render(request, 'jobs/AddJob.html')
 
 def get_job(request):

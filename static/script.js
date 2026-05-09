@@ -40,16 +40,21 @@ function applyForJob(btn) {
 }
 function deleteJob(btn) {
     let row = btn.closest('tr');
-    let jobTitle = row.cells[0].innerText;
+    let jobId = row.getAttribute('data-id');
+    if (!confirm("Delete this job?")) return;
 
-    let confirmDelete = confirm("Are you sure you want to delete: " + jobTitle + "?");
-    if (confirmDelete) {
-        let jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
-        let jobId = row.getAttribute('data-id');
-        jobs = jobs.filter(job => job.jobId !== jobId);
-        localStorage.setItem("jobs", JSON.stringify(jobs));
-        row.remove();
-    }
+    fetch('/api/delete-job/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ jobId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) row.remove();
+    });
 }
 function filterCards(searchValue) {
     let val = searchValue.toLowerCase();
