@@ -6,19 +6,19 @@ from django.forms.models import model_to_dict # pyright: ignore[reportMissingMod
 from .models import Job, Application, UserProfile
 
 def home(request):
-    return render(request, 'Home.html')
+    return render(request, 'jobs/Home.html')
 
 def index(request):
-    return render(request, 'Index.html')
+    return render(request, 'jobs/Index.html')
 
 def login_view(request):
-    return render(request, 'LogIn.html')
+    return render(request, 'jobs/LogIn.html')
 
 def signup(request):
-    return render(request, 'SignUp.html')
+    return render(request, 'jobs/SignUp.html')
 
 def admin_main(request):
-    return render(request, 'AdminMain.html')
+    return render(request, 'jobs/AdminMain.html')
 
 def user_main(request):
     jobs = list(Job.objects.values(
@@ -26,10 +26,10 @@ def user_main(request):
         'salary', 'experience', 'location',
         'status', 'description'
     ))
-    return render(request, 'UserMain.html', {'jobs_json': json.dumps(jobs)})
+    return render(request, 'jobs/UserMain.html', {'jobs_json': json.dumps(jobs)})
 
 def job_details(request):
-    return render(request, 'JobDetails.html')
+    return render(request, 'jobs/JobDetails.html')
 
 def apply_job(request):
     if request.method == 'POST':
@@ -52,7 +52,7 @@ def withdraw_application(request):
         return JsonResponse({'success': True}, status=200)
 
 def applied_jobs(request):
-    return render(request, 'AppliedJobs.html')
+    return render(request, 'jobs/AppliedJobs.html')
 
 def get_applied_jobs(request):
     user_email = request.GET.get('user_email')
@@ -73,7 +73,7 @@ def get_applied_jobs(request):
     return JsonResponse({'applied_jobs': applied_jobs_data})
 
 def edit_job(request):
-    return render(request, 'EditJob.html')
+    return render(request, 'jobs/EditJob.html')
 
 def add_job(request):
     if request.method == 'POST':
@@ -91,7 +91,7 @@ def add_job(request):
             description=data['description'],
         )
         return JsonResponse({'message': 'Job added successfully.'}, status=201)
-    return render(request, 'AddJob.html')
+    return render(request, 'jobs/AddJob.html')
 
 def get_job(request):
     job = Job.objects.get(jobId=request.GET.get('id'))
