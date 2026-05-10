@@ -20,3 +20,4 @@ urlpatterns = [
     path('api/job/', views.get_job, name='get_job'),
     path('api/delete-job/', views.delete_job, name='delete_job'),
 ]
+
