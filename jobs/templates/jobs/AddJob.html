@@ -5,20 +5,19 @@
     <title>Add Jobs</title>
     <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
 </head>
-<header>
-    <nav>
-        <a href="{% url 'home' %}">Home</a> |
-        <a href="{% url 'admin_main' %}">Added Jobs</a> |
-        <a href="{% url 'index' %}">Logout</a>
-    </nav>
-</header>
 <body>
+    <header>
+        <nav>
+            <a href="{% url 'home' %}">Home</a> |
+            <a href="{% url 'admin_main' %}">Added Jobs</a> |
+            <a href="{% url 'index' %}">Logout</a>
+        </nav>
+    </header>
+
     <div class="main-content">
         <div class="centered-form">
             <h1 style="text-align:center;">Add a job</h1>
             <form>
-                
-
                 <label for="jobTitle">Job Title:</label><br>
                 <input type="text" id="jobTitle" name="jobTitle"><br><br>
 
@@ -49,6 +48,6 @@
         </div>
     </div>
     <script src="{% static 'JobDetails.js' %}"></script>
-    <script src="{% static 'script.js' %}"></script> 
+    <script src="{% static 'script.js' %}"></script>
 </body>
 </html>

@@ -2,64 +2,66 @@
 <html>
 <head>
     <title>Home</title>
-{% load static %}
-<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
+<body>
+    <header>
+        <h2>Linked Out</h2>
+        <nav>
 
-<header>
-    <h2>Linked Out</h2>
-    <nav>
-     
-        <span id="applicationsLink"></span>
-        <span id="authLink"></span>
-    </nav>
-</header>
+            <span id="applicationsLink"></span>
+            <span id="authLink"></span>
+        </nav>
+    </header>
 
-<div class="main-content">
-    <form class="search-form" action="Link">
-        <input type="search" id="search" name="search" placeholder="Search For Jobs...">
-        <button type="submit">Search</button>
-    </form>
-    <hr>
-  
+    <div class="main-content">
+        <form class="search-form" action="Link">
+            <input type="search" id="search" name="search" placeholder="Search For Jobs...">
+            <button type="submit">Search</button>
+        </form>
+        <hr>
 
-    <div class="ideas-section">
-    <div class="idea-card">
-        <h3> Find Your Dream Job</h3>
-        <p>Browse hundreds of job listings across different industries and locations. Your next opportunity is just a search away.</p>
+
+        <div class="ideas-section">
+            <div class="idea-card">
+                <h3> Find Your Dream Job</h3>
+                <p>Browse hundreds of job listings across different industries and locations. Your next opportunity is just a search away.</p>
+            </div>
+
+            <div class="idea-card">
+                <h3> Easy Applications</h3>
+                <p>Apply for jobs with a single click. Track all your applications in one place and never lose track of where you applied.</p>
+            </div>
+
+            <div class="idea-card">
+                <h3> Top Companies</h3>
+                <p>Connect with leading employers actively looking for talent like you. From startups to large corporations, find the right fit.</p>
+            </div>
+
+            <div class="idea-card">
+                <h3> Track Progress</h3>
+                <p>Stay on top of your job search. See all your active applications and withdraw anytime if your plans change.</p>
+            </div>
+
+            <div class="idea-card">
+                <h3> Any Experience Level</h3>
+                <p>Whether you're a fresh graduate or a seasoned professional, there are opportunities here for every experience level.</p>
+            </div>
+
+            <div class="idea-card">
+                <h3> Local & Remote</h3>
+                <p>Find jobs near you or work from anywhere. Filter by location to find opportunities that match your lifestyle.</p>
+            </div>
+        </div>
     </div>
 
-    <div class="idea-card">
-        <h3> Easy Applications</h3>
-        <p>Apply for jobs with a single click. Track all your applications in one place and never lose track of where you applied.</p>
+    <div class="cards" style="margin-top: 20px;">
+        <div id="jobContainer" style="display: none;"></div>
     </div>
-
-    <div class="idea-card">
-        <h3> Top Companies</h3>
-        <p>Connect with leading employers actively looking for talent like you. From startups to large corporations, find the right fit.</p>
-    </div>
-
-    <div class="idea-card">
-        <h3> Track Progress</h3>
-        <p>Stay on top of your job search. See all your active applications and withdraw anytime if your plans change.</p>
-    </div>
-
-    <div class="idea-card">
-        <h3> Any Experience Level</h3>
-        <p>Whether you're a fresh graduate or a seasoned professional, there are opportunities here for every experience level.</p>
-    </div>
-
-    <div class="idea-card">
-        <h3> Local & Remote</h3>
-        <p>Find jobs near you or work from anywhere. Filter by location to find opportunities that match your lifestyle.</p>
-    </div>
-    </div>
-</div>
-</div>
-<div class="cards" style="margin-top: 20px;">
-    <div id="jobContainer" style="display: none;"></div>
-</div>
+    <script src="{% static 'JobDetails.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'Home.js' %}"></script>
 </body>
-<script src="{% static 'JobDetails.js' %}"></script>
-<script src="{% static 'script.js' %}"></script>
-<script src="{% static 'Home.js' %}"></script>
+
 </html>
