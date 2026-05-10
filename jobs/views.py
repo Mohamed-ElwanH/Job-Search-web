@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
-from .models import Job
+from .models import Job, Application
 
 def home(request):
     return render(request, 'jobs/Home.html')
@@ -21,13 +21,56 @@ def admin_main(request):
     return render(request, 'jobs/AdminMain.html')
 
 def user_main(request):
-    return render(request, 'jobs/UserMain.html')
+    jobs = list(Job.objects.values(
+        'jobId', 'jobTitle', 'companyName',
+        'salary', 'experience', 'location',
+        'status', 'description'
+    ))
+    return render(request, 'jobs/UserMain.html', {'jobs_json': json.dumps(jobs)})
 
 def job_details(request):
     return render(request, 'jobs/JobDetails.html')
 
+def apply_job(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        jobId = data.get('jobId')
+        user_email = data.get('user_email')
+        job = Job.objects.get(jobId=jobId)
+        if Application.objects.filter(job=job, user_email=user_email).exists():
+            return JsonResponse({'error': 'You have already applied for this job.'}, status=400)
+        Application.objects.create(job=job, user_email=user_email)
+        return JsonResponse({'success': True}, status=200)
+
+def withdraw_application(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        jobId = data.get('jobId')
+        user_email = data.get('user_email')
+        job = Job.objects.get(jobId=jobId)
+        Application.objects.filter(job=job, user_email=user_email).delete()
+        return JsonResponse({'success': True}, status=200)
+
 def applied_jobs(request):
     return render(request, 'jobs/AppliedJobs.html')
+
+def get_applied_jobs(request):
+    user_email = request.GET.get('user_email')
+    applications = Application.objects.filter(user_email=user_email).select_related('job')
+    applied_jobs_data = [
+        {
+            'jobId': application.job.jobId,
+            'jobTitle': application.job.jobTitle,
+            'companyName': application.job.companyName,
+            'salary': application.job.salary,
+            'experience': application.job.experience,
+            'location': application.job.location,
+            'status': application.job.status,
+            'description': application.job.description,
+        }
+        for application in applications
+    ]
+    return JsonResponse({'applied_jobs': applied_jobs_data})
 
 def edit_job(request):
     return render(request, 'jobs/EditJob.html')
@@ -51,13 +94,11 @@ def add_job(request):
     return render(request, 'jobs/AddJob.html')
 
 def get_job(request):
-    # GET /api/job/?id=J001  →  returns one job as JSON
     job = Job.objects.get(jobId=request.GET.get('id'))
     return JsonResponse(model_to_dict(job))
 
 @csrf_exempt
 def delete_job(request):
-    # POST /api/delete-job/  →  deletes the job, returns success
     data = json.loads(request.body)
     Job.objects.filter(jobId=data['jobId']).delete()
     return JsonResponse({'success': True})

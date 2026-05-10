@@ -14,4 +14,12 @@ class Job(models.Model):
         return self.jobTitle
     
     
+class Application(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True, blank=True)
+    user_email = models.CharField(max_length=100)
     
+    class Meta:
+        unique_together = ('job', 'user_email')
+    
+    def __str__(self):
+        return f"{self.user_email} - {self.job.jobTitle}"
