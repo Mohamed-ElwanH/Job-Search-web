@@ -19,7 +19,7 @@ if (submitBtn) {
         const experience = document.getElementById("experience").value.trim();
         const description = document.getElementById("description").value.trim();
         const location = document.getElementById("location").value.trim();
-        let jobDisplay = getJobs();
+        
         if (!jobTitle || !jobId || !companyName || !salary || !experience || !description || !location) {
             alert("Please fill in all fields.");
             return;
@@ -28,14 +28,22 @@ if (submitBtn) {
             alert("Please select a job status.");
             return;
         }
-        if (jobDisplay.find(j => j.jobId === jobId)) {
-            alert("A job with this ID already exists. Please use a unique ID.");
-            return;
-        }
-        const job = { jobTitle, jobId, companyName, salary, status, experience, description, location };
-        jobDisplay.push(job);
-        localStorage.setItem("jobs", JSON.stringify(jobDisplay));
-        alert("Job added successfully!");
+         fetch('/add-job/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ jobId, jobTitle, companyName, salary, experience, location, status, description })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                alert(data.message);
+            }
+        });
     }
 }
 
