@@ -19,7 +19,7 @@ if (submitBtn) {
         const experience = document.getElementById("experience").value.trim();
         const description = document.getElementById("description").value.trim();
         const location = document.getElementById("location").value.trim();
-        let jobDisplay = getJobs();
+        
         if (!jobTitle || !jobId || !companyName || !salary || !experience || !description || !location) {
             alert("Please fill in all fields.");
             return;
@@ -28,14 +28,22 @@ if (submitBtn) {
             alert("Please select a job status.");
             return;
         }
-        if (jobDisplay.find(j => j.jobId === jobId)) {
-            alert("A job with this ID already exists. Please use a unique ID.");
-            return;
-        }
-        const job = { jobTitle, jobId, companyName, salary, status, experience, description, location };
-        jobDisplay.push(job);
-        localStorage.setItem("jobs", JSON.stringify(jobDisplay));
-        alert("Job added successfully!");
+         fetch('/add-job/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ jobId, jobTitle, companyName, salary, experience, location, status, description })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                alert(data.message);
+            }
+        });
     }
 }
 
@@ -155,33 +163,35 @@ if (adminJobContainer) {
 
 const container = document.getElementById("appliedJobsContainer");
 if (container) {
-    let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
-
-    if (appliedJobs.length === 0) {
-        container.innerHTML = "<p>You have not applied for any jobs yet.</p>";
-    } else {
-        appliedJobs.forEach(function (job) {
-            container.innerHTML += `
-            <div class="card">
-                <div class="card-top">
-                    <div>
-                        <h5 class="card-title">${job.jobTitle}</h5>
-                        <p class="card-text">${job.companyName}</p>
-                        <p class="card-text">${job.location}</p>
-                    </div>
-                    <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
-                </div>
-                <hr>
-                <div class="card-details">
-                    <div><small>Job ID</small><p>${job.jobId}</p></div>
-                    <div><small>Salary</small><p>${job.salary}</p></div>
-                    <div><small>Experience</small><p>${job.experience} years</p></div>
-                </div>
-                <hr>
-                <div class="card-actions">
-                    <button type="button" onclick="withdrawJob(this)" data-id="${job.jobId}">Withdraw</button>
-                </div>
-            </div>`;
+    fetch('/api/applied-jobs/')
+        .then(res => res.json())
+        .then(appliedJobs => {
+            if (appliedJobs.length === 0) {
+                container.innerHTML = "<p>You have not applied for any jobs yet.</p>";
+            } else {
+                appliedJobs.forEach(function(job) {
+                    container.innerHTML += `
+                    <div class="card">
+                        <div class="card-top">
+                            <div>
+                                <h5 class="card-title">${job.jobTitle}</h5>
+                                <p class="card-text">${job.companyName}</p>
+                                <p class="card-text">${job.location}</p>
+                            </div>
+                            <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
+                        </div>
+                        <hr>
+                        <div class="card-details">
+                            <div><small>Job ID</small><p>${job.jobId}</p></div>
+                            <div><small>Salary</small><p>${job.salary}</p></div>
+                            <div><small>Experience</small><p>${job.experience} years</p></div>
+                        </div>
+                        <hr>
+                        <div class="card-actions">
+                            <button type="button" onclick="withdrawJob(this)" data-id="${job.jobId}">Withdraw</button>
+                        </div>
+                    </div>`;
+                });
+            }
         });
-    }
 }
