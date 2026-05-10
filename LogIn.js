@@ -1,17 +1,21 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
-    const username = document.getElementById('username');
+    const username = document.getElementById('email');
     const password = document.getElementById('password');
     const formError = document.getElementById('formError');
-
-    const adminEmails = new Set([
-        '20242265@stud.fci-cu.edu.eg',
-        '20240549@stud.fci-cu.edu.eg',
-        '20242399@stud.fci-cu.edu.eg',
-        '20242080@stud.fci-cu.edu.eg',
-        '20240710@stud.fci-cu.edu.eg',
-        '20240326@stud.fci-cu.edu.eg'
-    ]);
 
     function validateRequiredFields() {
         if (!username || !password || !formError)
@@ -31,20 +35,32 @@
 
     if (form) {
         form.addEventListener('submit', function (e) {
-
             e.preventDefault();
-            if (!validateRequiredFields()) {
-                if (username && !username.value.trim()) username.focus();
-                else if (password && !password.value) password.focus();
-                return;
-            }
+            if (!validateRequiredFields()) return;
 
-            const val = (username.value || '').trim().toLowerCase();
-            if (adminEmails.has(val)) {
-                window.location.href = 'AdminMain.html';
-            } else {
-                window.location.href = 'UserMain.html';
-            }
+            fetch('/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    email: username.value.trim(),
+                    password: password.value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.isAdmin ? '/admin-main/' : '/user-main/';
+                } else {
+                    formError.textContent = data.error || 'An error occurred during login.';
+                }
+            })
+            .catch(err => {
+                formError.textContent = 'An error occurred. Please try again.';
+                console.error(err);
+            });
         });
     }
 });
