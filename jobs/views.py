@@ -1,24 +1,24 @@
 import json
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.forms.models import model_to_dict
+from django.shortcuts import render, redirect # pyright: ignore[reportMissingModuleSource]
+from django.http import JsonResponse # pyright: ignore[reportMissingModuleSource]
+from django.views.decorators.csrf import csrf_exempt # pyright: ignore[reportMissingModuleSource]
+from django.forms.models import model_to_dict # pyright: ignore[reportMissingModuleSource]
 from .models import Job, Application, UserProfile
 
 def home(request):
-    return render(request, 'jobs/Home.html')
+    return render(request, 'Home.html')
 
 def index(request):
-    return render(request, 'jobs/Index.html')
+    return render(request, 'Index.html')
 
 def login_view(request):
-    return render(request, 'jobs/LogIn.html')
+    return render(request, 'LogIn.html')
 
 def signup(request):
-    return render(request, 'jobs/SignUp.html')
+    return render(request, 'SignUp.html')
 
 def admin_main(request):
-    return render(request, 'jobs/AdminMain.html')
+    return render(request, 'AdminMain.html')
 
 def user_main(request):
     jobs = list(Job.objects.values(
@@ -26,30 +26,22 @@ def user_main(request):
         'salary', 'experience', 'location',
         'status', 'description'
     ))
-    return render(request, 'jobs/UserMain.html', {'jobs_json': json.dumps(jobs)})
+    return render(request, 'UserMain.html', {'jobs_json': json.dumps(jobs)})
 
 def job_details(request):
-    return render(request, 'jobs/JobDetails.html')
-@csrf_exempt
+    return render(request, 'JobDetails.html')
+
 def apply_job(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            jobId = data.get('jobId')
-            user_email = data.get('user_email')
-            if not jobId or not user_email:
-                return JsonResponse({'error': 'Missing jobId or user_email.'}, status=400)
-            job = Job.objects.get(jobId=jobId)
-            if Application.objects.filter(job=job, user_email=user_email).exists():
-                return JsonResponse({'error': 'You have already applied for this job.'}, status=400)
-            Application.objects.create(job=job, user_email=user_email)
-            return JsonResponse({'success': True}, status=200)
-        except Job.DoesNotExist:
-            return JsonResponse({'error': 'Job not found.'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Invalid method.'}, status=405)
-@csrf_exempt
+        data = json.loads(request.body)
+        jobId = data.get('jobId')
+        user_email = data.get('user_email')
+        job = Job.objects.get(jobId=jobId)
+        if Application.objects.filter(job=job, user_email=user_email).exists():
+            return JsonResponse({'error': 'You have already applied for this job.'}, status=400)
+        Application.objects.create(job=job, user_email=user_email)
+        return JsonResponse({'success': True}, status=200)
+
 def withdraw_application(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -60,30 +52,28 @@ def withdraw_application(request):
         return JsonResponse({'success': True}, status=200)
 
 def applied_jobs(request):
-    return render(request, 'jobs/AppliedJobs.html')
+    return render(request, 'AppliedJobs.html')
 
 def get_applied_jobs(request):
-    user_email = request.GET.get('user_email') or request.COOKIES.get('user_email')
-    if not user_email:
-        return JsonResponse([], safe=False)
+    user_email = request.GET.get('user_email')
     applications = Application.objects.filter(user_email=user_email).select_related('job')
     applied_jobs_data = [
         {
-            'jobId': app.job.jobId,
-            'jobTitle': app.job.jobTitle,
-            'companyName': app.job.companyName,
-            'salary': app.job.salary,
-            'experience': app.job.experience,
-            'location': app.job.location,
-            'status': app.job.status,
-            'description': app.job.description,
+            'jobId': application.job.jobId,
+            'jobTitle': application.job.jobTitle,
+            'companyName': application.job.companyName,
+            'salary': application.job.salary,
+            'experience': application.job.experience,
+            'location': application.job.location,
+            'status': application.job.status,
+            'description': application.job.description,
         }
-        for app in applications
+        for application in applications
     ]
-    return JsonResponse(applied_jobs_data, safe=False)
+    return JsonResponse({'applied_jobs': applied_jobs_data})
 
 def edit_job(request):
-    return render(request, 'jobs/EditJob.html')
+    return render(request, 'EditJob.html')
 
 def add_job(request):
     if request.method == 'POST':
@@ -101,7 +91,7 @@ def add_job(request):
             description=data['description'],
         )
         return JsonResponse({'message': 'Job added successfully.'}, status=201)
-    return render(request, 'jobs/AddJob.html')
+    return render(request, 'AddJob.html')
 
 def get_job(request):
     job = Job.objects.get(jobId=request.GET.get('id'))
