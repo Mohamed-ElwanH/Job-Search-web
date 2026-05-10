@@ -17,7 +17,7 @@
             <h1>Sign up</h1>
             <p>Here you can create an account to access our services. Please fill in the form below to get started:</p>
 
-            <form method="POST">
+            <form>
                 {% csrf_token %}
                 <label for="username"><b>Username:</b></label>
                 <input type="text" id="username" name="username" maxlength="32" pattern="^[A-Za-z _]{1,32}$" title="Username must be 1-32 characters; only English letters, space and underscore are allowed." required><br><br>
