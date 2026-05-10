@@ -1,3 +1,16 @@
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
     const username = document.getElementById('username');
@@ -6,16 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirm = document.getElementById('confirm_password');
     const pwError = document.getElementById('pwError');
     const formError = document.getElementById('formError');
-    const isAdminInput = document.getElementById('is_admin');
 
-    const adminEmails = new Set([
-        '20242265@stud.fci-cu.edu.eg',
-        '20240549@stud.fci-cu.edu.eg',
-        '20242399@stud.fci-cu.edu.eg',
-        '20242080@stud.fci-cu.edu.eg',
-        '20240710@stud.fci-cu.edu.eg',
-        '20240326@stud.fci-cu.edu.eg'
-    ]);
 
     function validatePasswords() {
         if (!password || !confirm || !pwError)
@@ -39,17 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    function updateAdminFlag() {
-        if (!isAdminInput || !email)
-            return;
-        const val = (email.value || '').trim().toLowerCase();
-        isAdminInput.value = adminEmails.has(val) ? 'true' : 'false';
-    }
-
     if (username)
         username.addEventListener('input', validateRequiredFields);
     if (email)
-        email.addEventListener('input', function () { validateRequiredFields(); updateAdminFlag(); });
+        email.addEventListener('input', validateRequiredFields);
     if (password)
         password.addEventListener('input', function () { validateRequiredFields(); validatePasswords(); });
     if (confirm)
@@ -57,19 +54,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (form) {
         form.addEventListener('submit', function (e) {
-            updateAdminFlag();
+            e.preventDefault();
             const okRequired = validateRequiredFields();
             const okPasswords = validatePasswords();
-            if (!okRequired || !okPasswords) {
-                e.preventDefault();
-                if (!okRequired) {
-                    if (username && !username.value.trim()) username.focus();
-                    else if (email && !email.value.trim()) email.focus();
-                    else if (password && !password.value) password.focus();
+            if (!okRequired || !okPasswords) return;
+
+            const isAdmin = document.getElementById('admin_checkbox').checked;
+
+            fetch('/api/signup/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    username: username.value.trim(),
+                    email: email.value.trim(),
+                    password: password.value,
+                    isAdmin: isAdmin
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/login/';
                 } else {
-                    confirm.focus();
+                    formError.textContent = data.error || 'An error occurred during signup.';
                 }
-            }
+            })
+            .catch(err => {
+                formError.textContent = 'An error occurred. Please try again.';
+                console.error(err);
+            });
         });
     }
 });
