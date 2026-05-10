@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
-from .models import Job, Application
+from .models import Job, Application, UserProfile
 
 def home(request):
     return render(request, 'jobs/Home.html')
@@ -112,3 +112,35 @@ def delete_job(request):
     data = json.loads(request.body)
     Job.objects.filter(jobId=data['jobId']).delete()
     return JsonResponse({'success': True})
+
+def signup_api(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+
+        if UserProfile.objects.filter(email=email).exists():
+            return JsonResponse({'success': False, 'error': 'An account with this email already exists.'}, status=400)
+
+        user = UserProfile.objects.create(
+            username=data.get('username'),
+            email=email,
+            password=data.get('password'),
+            isAdmin=data.get('isAdmin', False)
+        )
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def login_api(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+
+        try:
+            user = UserProfile.objects.get(email=email, password=password)
+            request.session['user_email'] = user.email
+            request.session['is_admin'] = user.isAdmin
+            return JsonResponse({'success': True, 'isAdmin': user.isAdmin})
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Invalid email or password.'}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

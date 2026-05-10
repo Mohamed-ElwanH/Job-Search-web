@@ -1,3 +1,16 @@
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
     const username = document.getElementById('username');
@@ -6,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirm = document.getElementById('confirm_password');
     const pwError = document.getElementById('pwError');
     const formError = document.getElementById('formError');
- 
+
 
     function validatePasswords() {
         if (!password || !confirm || !pwError)
@@ -30,15 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    function updateAdminFlag() {
-    const isAdmin = document.getElementById('admin_checkbox').checked;
-    localStorage.setItem('is_admin', isAdmin ? 'true' : 'false');
-}
-
     if (username)
         username.addEventListener('input', validateRequiredFields);
     if (email)
-        email.addEventListener('input', function () { validateRequiredFields(); updateAdminFlag(); });
+        email.addEventListener('input', validateRequiredFields);
     if (password)
         password.addEventListener('input', function () { validateRequiredFields(); validatePasswords(); });
     if (confirm)
@@ -46,26 +54,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (form) {
         form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const okRequired = validateRequiredFields();
-    const okPasswords = validatePasswords();
-    if (!okRequired || !okPasswords) return;
+            e.preventDefault();
+            const okRequired = validateRequiredFields();
+            const okPasswords = validatePasswords();
+            if (!okRequired || !okPasswords) return;
 
-    const isAdmin = document.getElementById('admin_checkbox').checked;
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const isAdmin = document.getElementById('admin_checkbox').checked;
 
-    if (users.find(u => u.email === email.value.trim())) {
-        formError.textContent = 'An account with this email already exists.';
-        return;
-    }
-
-    users.push({
-        username: username.value.trim(),
-        email: email.value.trim(),
-        password: password.value,
-        isAdmin: isAdmin
-    });
-    localStorage.setItem('users', JSON.stringify(users));
-window.location.href = '/login/';});
+            fetch('/api/signup/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    username: username.value.trim(),
+                    email: email.value.trim(),
+                    password: password.value,
+                    isAdmin: isAdmin
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/login/';
+                } else {
+                    formError.textContent = data.error || 'An error occurred during signup.';
+                }
+            })
+            .catch(err => {
+                formError.textContent = 'An error occurred. Please try again.';
+                console.error(err);
+            });
+        });
     }
 });

@@ -1,3 +1,16 @@
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
     const username = document.getElementById('email');
@@ -25,17 +38,29 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             if (!validateRequiredFields()) return;
 
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const match = users.find(u => u.email === username.value.trim() && u.password === password.value);
-
-            if (!match) {
-                formError.textContent = 'Invalid email or password.';
-                return;
-            }
-
-            localStorage.setItem('is_admin', match.isAdmin ? 'true' : 'false');
-            localStorage.setItem('user_email', match.email);
-            window.location.href = match.isAdmin ? '/admin-main/' : '/user-main/';
+            fetch('/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    email: username.value.trim(),
+                    password: password.value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.isAdmin ? '/admin-main/' : '/user-main/';
+                } else {
+                    formError.textContent = data.error || 'An error occurred during login.';
+                }
+            })
+            .catch(err => {
+                formError.textContent = 'An error occurred. Please try again.';
+                console.error(err);
+            });
         });
     }
 });

@@ -6,6 +6,8 @@ urlpatterns = [
     path('index/', views.index, name='index'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup, name='signup'),
+    path('api/signup/', views.signup_api, name='signup_api'),
+    path('api/login/', views.login_api, name='login_api'),
     path('add-job/', views.add_job, name='add_job'),
     path('admin-main/', views.admin_main, name='admin_main'),
     path('user-main/', views.user_main, name='user_main'),
@@ -18,3 +20,4 @@ urlpatterns = [
     path('api/job/', views.get_job, name='get_job'),
     path('api/delete-job/', views.delete_job, name='delete_job'),
 ]
+

@@ -1,45 +1,49 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <title>Sign-up</title>
-{% load static %}
-<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
 <body>
-    <header>  <nav>
-    <a href="{% url 'home' %}">Home</a>
-    </nav></header>
-    <div class ="main-content">
-    <div class="centered-form">
-        <h1>Sign up</h1>
-        <p>Here you can create an account to access our services. Please fill in the form below to get started:</p>
+    <header>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+        </nav>
+    </header>
+    <div class="main-content">
+        <div class="centered-form">
+            <h1>Sign up</h1>
+            <p>Here you can create an account to access our services. Please fill in the form below to get started:</p>
 
-      <form method="POST">
-{% csrf_token %}
-            <label for="username"><b>Username:</b></label>
-            <input type="text" id="username" name="username" maxlength="15" pattern="^[A-Za-z _]{1,15}$" title="Username must be 1-15 characters; only English letters, space and underscore are allowed." required><br><br>
-            
-            <label for="email"><b>Email:</b></label>
-            <input type="email" id="email" name="email" required>
-            <br><br>
-            <label for="password"><b>Password:</b></label>
-            <input type="password" id="password" name="password" maxlength="32" pattern="^[A-Za-z]{1,32}$" title="Password must be 1-32 characters; only English letters are allowed." required>
-            <br><br>
-            <label for="confirm_password"><b>Confirm Password:</b></label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            <br><br>
-            <span id="pwError" class="error" aria-live="polite"></span>
-            <span id="formError" class="error" aria-live="polite"></span>
-            
-    <label>
-    <input type="checkbox" id="admin_checkbox"> Admin
-    </label>
-    <br><br>
-            <button type="submit">Sign Up</button>
-        </form>
-        <br /><br />
-        <div class="small">Already have an account? <a href="/login/">Log in here</a>.</div>
+            <form method="POST">
+                {% csrf_token %}
+                <label for="username"><b>Username:</b></label>
+                <input type="text" id="username" name="username" maxlength="32" pattern="^[A-Za-z _]{1,32}$" title="Username must be 1-32 characters; only English letters, space and underscore are allowed." required><br><br>
+
+                <label for="email"><b>Email:</b></label>
+                <input type="email" id="email" name="email" required>
+                <br><br>
+                <label for="password"><b>Password:</b></label>
+                <input type="password" id="password" name="password" maxlength="32" pattern="^[A-Za-z0-9]{8,32}$" title="Password must be 8-32 characters; only English letters and numbers are allowed." required>
+                <br><br>
+                <label for="confirm_password"><b>Confirm Password:</b></label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+                <br><br>
+                <span id="pwError" class="error" aria-live="polite"></span>
+                <span id="formError" class="error" aria-live="polite"></span>
+
+                <label>
+                    <input type="checkbox" id="admin_checkbox"> Admin
+                </label>
+                <br><br>
+                <button type="submit">Sign Up</button>
+            </form>
+            <br /><br />
+            <div class="small">Already have an account? <a href="/login/">Log in here</a>.</div>
+        </div>
     </div>
-    <script src="{% static 'SignUp.js' %}" defer></script>
+        <script src="{% static 'SignUp.js' %}" defer></script>
 </body>
 </html>

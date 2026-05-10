@@ -1,5 +1,14 @@
 from django.db import models
 
+class UserProfile(models.Model):
+    username = models.CharField(max_length=150)
+    email = models.CharField(max_length=254, unique=True)
+    password = models.CharField(max_length=255)
+    isAdmin = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
+
 class Job(models.Model):
     jobId = models.CharField(max_length=50, unique = True)
     jobTitle = models.CharField(max_length=100)
