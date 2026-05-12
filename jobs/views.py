@@ -143,3 +143,7 @@ def login_api(request):
         except UserProfile.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid email or password.'}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_jobs(request):
+    jobs = list(Job.objects.values())
+    return JsonResponse(jobs, safe=False)
