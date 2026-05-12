@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Jobs</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'stylesheet.css' %}"></head>
+<body>
+    
+   <header>
+    <h1>Linked Out</h1>
+    
+        <nav>
+           <a href="{% url 'home' %}">Home</a> |
+<a href="{% url 'applied_jobs' %}">My Applications</a> |
+<a href="{% url 'index' %}">Logout</a>
+
+        </nav>
+        
+</header>
+
+<div class ="main-content">
+    <form class = "search-form" action="Link" >
+         <input type="search" id="search" name="search" placeholder ="Search For Jobs...">
+         <button type="submit">Search</button>
+    </form>
+    
+   
+ <div class="cards">
+<div id = "jobContainer"></div>
+   
+ 
+
+</div>
+</div>
+
+
+
+    <script src="{% static 'JobDetails.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+
+</body>
+
+</html>

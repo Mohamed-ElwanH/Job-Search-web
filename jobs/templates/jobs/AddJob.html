@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Jobs</title>
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'home' %}">Home</a> |
+            <a href="{% url 'admin_main' %}">Added Jobs</a> |
+            <a href="{% url 'index' %}">Logout</a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="centered-form">
+            <h1 style="text-align:center;">Add a job</h1>
+            <form>
+                <label for="jobTitle">Job Title:</label><br>
+                <input type="text" id="jobTitle" name="jobTitle"><br><br>
+
+                <label for="id">Job ID:</label><br>
+                <input type="text" id="id" name="jobId"><br><br>
+
+                <label for="companyName">Company Name:</label><br>
+                <input type="text" id="companyName" name="companyName"><br><br>
+
+                <label for="salary">Job Salary:</label><br>
+                <input type="text" id="salary" name="salary"><br><br>
+
+                <label for="experience">Years of Experience:</label><br>
+                <input type="text" id="experience" name="experience"><br><br>
+
+                <label for="location">Location:</label><br>
+                <input type="text" id="location" name="location"><br><br>
+
+                <label>Job Status:</label><br>
+                <label><input type="radio" name="status" value="Open"> Open</label>
+                <label><input type="radio" name="status" value="Closed"> Closed</label><br><br>
+
+                <label for="description">Job Description:</label><br>
+                <input type="text" id="description" name="description"><br><br>
+
+                <button type="submit" id="submitBtn">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script src="{% static 'JobDetails.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

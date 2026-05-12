@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Applied Jobs</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
+
+<body>
+    <header>
+        <h2> Linked Out</h2>
+
+        <nav>
+            <a href="{% url 'home' %}">Home</a> |
+            <a href="{% url 'user_main' %}">Available Jobs</a> |
+            <a href="{% url 'index' %}">Logout</a>
+
+        </nav>
+    </header>
+
+    <hr>
+
+    <div class="main-content">
+        <h1>My Applications</h1>
+
+
+        <div class="cards">
+            <div id="appliedJobsContainer"></div>
+        </div>
+
+
+
+    </div>
+
+    <script src="{% static 'JobDetails.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+</body>
+
+</html>

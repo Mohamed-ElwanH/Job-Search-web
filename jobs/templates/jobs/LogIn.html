@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Log-in</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+        </nav>
+    </header>
+    <div class="main-content">
+
+        <div class="centered-form">
+            <h1> Sign in</h1>
+
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label for="email"><b>Email:</b></label> <br>
+                <input type="text" id="email" name="email" required><br><br>
+
+                <label for="password"><b>Password:</b></label><br>
+                <input type="password" id="password" name="password" required>
+
+                <span id="formError" class="error" aria-live="polite"></span>
+                <br /><br />
+                <button type="submit">Log In</button>
+            </form>
+            <br /><br />
+            <div class="small">Don't have an account? <a href="/signup/">Sign up here</a>.</div>
+
+
+        </div>
+    </div>
+        <script src="{% static 'LogIn.js' %}" defer></script>
+</body>
+</html>

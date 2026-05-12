@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Company Jobs - Admin Panel</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
+
+<body>
+    <header>
+        <h2> Linked Out - Company Admin Panel </h2>
+        <nav>
+            <a href="{% url 'home' %}">Home</a> |
+            <a href="{% url 'add_job' %}">Add New Job</a> |
+            <a href="{% url 'index' %}">Logout</a>
+        </nav>
+
+    </header>
+
+
+    <h3>Jobs Created by My Company</h3>
+
+    <p>Manage your company's job listings below.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Job Title</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="adminJobContainer"></tbody>
+    </table>
+    <script src="{% static 'JobDetails.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+</body>
+
+</html>
