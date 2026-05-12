@@ -64,20 +64,20 @@ def applied_jobs(request):
     return render(request, 'jobs/AppliedJobs.html')
 
 def get_applied_jobs(request):
-    user_email = request.GET.get('user_email')
+    user_email = request.session.get('user_email')
     applications = Application.objects.filter(user_email=user_email).select_related('job')
     applied_jobs_data = [
         {
-            'jobId': application.job.jobId,
-            'jobTitle': application.job.jobTitle,
-            'companyName': application.job.companyName,
-            'salary': application.job.salary,
-            'experience': application.job.experience,
-            'location': application.job.location,
-            'status': application.job.status,
-            'description': application.job.description,
+            'jobId': app.job.jobId,
+            'jobTitle': app.job.jobTitle,
+            'companyName': app.job.companyName,
+            'salary': app.job.salary,
+            'experience': app.job.experience,
+            'location': app.job.location,
+            'status': app.job.status,
+            'description': app.job.description,
         }
-        for application in applications
+        for app in applications
     ]
     return JsonResponse({'applied_jobs': applied_jobs_data})
 
@@ -147,3 +147,19 @@ def login_api(request):
 def get_jobs(request):
     jobs = list(Job.objects.values())
     return JsonResponse(jobs, safe=False)
+def get_session(request):
+    return JsonResponse({
+        'is_logged_in': 'user_email' in request.session,
+        'is_admin': request.session.get('is_admin', False),
+        'user_email': request.session.get('user_email', ''),
+    })
+def logout_view(request):
+    request.session.flush()
+    return JsonResponse({'success': True})
+def get_jobs(request):
+    jobs = list(Job.objects.values(
+        'jobId', 'jobTitle', 'companyName',
+        'salary', 'experience', 'location',
+        'status', 'description'
+    ))
+    return JsonResponse({'jobs': jobs})

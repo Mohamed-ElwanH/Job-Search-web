@@ -46,9 +46,8 @@
 
         </div>
     </div>
-    <script>
-    localStorage.removeItem('is_admin');
-    localStorage.removeItem('appliedJobs');
-    </script>
+   <script>
+fetch('/api/logout/', { method: 'POST', headers: { 'X-CSRFToken': getCookie('csrftoken') } });
+</script>
 </body>
 </html>

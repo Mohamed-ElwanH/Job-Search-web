@@ -22,5 +22,8 @@ urlpatterns = [
     path('api/jobs/', views.get_jobs, name='get_jobs'),
     path('api/session/', views.get_session, name='get_session'),
     path('logout/', views.logout_view, name='logout'),
+    path('api/session/', views.get_session, name='get_session'),
+    path('api/logout/', views.logout_view, name='logout'),
+    path('api/jobs/', views.get_jobs, name='get_jobs'),
 ]
     

@@ -12,44 +12,39 @@ function getCookie(name) {
 }
 
 function applyForJob(btn) {
-    const isLoggedIn = localStorage.getItem('is_admin') !== null;
-    const isAdmin = localStorage.getItem('is_admin') === 'true';
-    const userEmail = localStorage.getItem('user_email');
-
-    if (!isLoggedIn) {
-        window.location.href = '/signup/';
-        return;
-    }
-    if (isAdmin) {
-        alert("Admins cannot apply for jobs.");
-        return;
-    }
-
-    let card = btn.closest('.card');
-    let badge = card.querySelector('.badge');
-
-    if (badge.classList.contains('closed')) {
-        alert("Sorry, this job is already closed.");
-        return;
-    }
-
-    let jobId = btn.getAttribute('data-id');
-
-    fetch('/api/apply/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-        body: JSON.stringify({ jobId, user_email: userEmail })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) {
-            alert(data.error);
-        } else {
-            alert("Successfully applied! Good luck!");
-        }
-    });
+    fetch('/api/session/')
+        .then(res => res.json())
+        .then(session => {
+            if (!session.is_logged_in) {
+                window.location.href = '/signup/';
+                return;
+            }
+            if (session.is_admin) {
+                alert("Admins cannot apply for jobs.");
+                return;
+            }
+            let card = btn.closest('.card');
+            let badge = card.querySelector('.badge');
+            if (badge.classList.contains('closed')) {
+                alert("Sorry, this job is already closed.");
+                return;
+            }
+            let jobId = btn.getAttribute('data-id');
+            fetch('/api/apply/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({ jobId, user_email: session.user_email })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        alert("Successfully applied! Good luck!");
+                    }
+                });
+        });
 }
-
 function deleteJob(btn) {
     let row = btn.closest('tr');
     let jobId = row.getAttribute('data-id');
@@ -63,10 +58,10 @@ function deleteJob(btn) {
         },
         body: JSON.stringify({ jobId })
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) row.remove();
-    });
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) row.remove();
+        });
 }
 
 function filterCards(searchValue) {
@@ -83,8 +78,35 @@ function filterCards(searchValue) {
 
 document.addEventListener("DOMContentLoaded", function () {
     const jobContainer = document.getElementById('jobContainer');
-    if (jobContainer) {
+    if (jobContainer && jobContainer.dataset.home !== 'true') {
         jobContainer.style.display = 'block';
+        fetch('/api/jobs/')
+            .then(res => res.json())
+            .then(data => {
+                data.jobs.forEach(job => {
+                    jobContainer.innerHTML += `
+            <div class="card">
+                <div class="card-top">
+                    <div>
+                        <h5 class="card-title">${job.jobTitle}</h5>
+                        <p class="card-text">Company Name: ${job.companyName}</p>
+                    </div>
+                    <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
+                </div>
+                <hr>
+                <div class="card-details">
+                    <div><small>ID</small><p>${job.jobId}</p></div>
+                    <div><small>Salary</small><p>${job.salary}</p></div>
+                    <div><small>Location</small><p>${job.location}</p></div>
+                </div>
+                <hr>
+                <div class="card-actions">
+                    <button type="button" onclick="viewDetails('${job.jobId}')">View Details</button>
+                    <button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>
+                </div>
+            </div>`;
+                });
+            });
     }
 
     const searchForm = document.querySelector('.search-form');
@@ -105,26 +127,32 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function withdrawJob(btn) {
-    let jobId = btn.getAttribute("data-id");
-    const userEmail = localStorage.getItem('user_email');
-    if (!confirm("Are you sure you want to withdraw this application?")) return;
-
-    fetch('/api/withdraw/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-        body: JSON.stringify({ jobId, user_email: userEmail })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) btn.closest('.card').remove();
-    });
+    fetch('/api/session/')
+        .then(res => res.json())
+        .then(session => {
+            let jobId = btn.getAttribute("data-id");
+            if (!confirm("Are you sure you want to withdraw this application?")) return;
+            fetch('/api/withdraw/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({ jobId, user_email: session.user_email })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) btn.closest('.card').remove();
+                });
+        });
 }
 
+
 function viewDetails(jobId) {
-    const isLoggedIn = localStorage.getItem('is_admin') !== null;
-    if (!isLoggedIn) {
-        window.location.href = '/signup/';
-        return;
-    }
-    window.location.href = '/job-details/?id=' + jobId;
+    fetch('/api/session/')
+        .then(res => res.json())
+        .then(session => {
+            if (!session.is_logged_in) {
+                window.location.href = '/signup/';
+                return;
+            }
+            window.location.href = '/job-details/?id=' + jobId;
+        });
 }

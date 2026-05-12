@@ -7,7 +7,18 @@ const jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
 function getJobs() {
     return JSON.parse(localStorage.getItem("jobs") || "[]");
 }
-
+function deleteJobAndRedirect(jobId) {
+    if (!confirm("Delete this job?")) return;
+    fetch('/api/delete-job/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({ jobId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) window.location.href = '/admin-main/';
+    });
+}
 if (submitBtn) {
     submitBtn.onclick = function (e) {
         e.preventDefault();
@@ -42,7 +53,6 @@ if (submitBtn) {
                     alert(data.error);
                 } else {
                     alert(data.message);
-                    // ÇÎÊíÇÑí: ÊÝÑíÛ ÇáÎÇäÇÊ ÈÚÏ ÇáÅÖÇÝÉ ÈäÌÇÍ
                     document.querySelector("form").reset();
                 }
             });
@@ -54,78 +64,50 @@ if (jobContainer) {
     const jobId = params.get("id");
 
     if (jobId) {
-        // show single job detail
-        const job = jobs.find(j => j.jobId === jobId);
-
-        if (!job) {
-            jobContainer.innerHTML = "<p>Job not found.</p>";
-        } else {
-            jobContainer.innerHTML = `
-            <div class="card">
-                <div class="card-top">
-                    <div>
-                        <h5 class="card-title">${job.jobTitle}</h5>
-                        <p class="card-text">Company: ${job.companyName}</p>
-                        <p class="card-text">Location: ${job.location}</p>
+        fetch('/api/session/')
+        .then(res => res.json())
+        .then(session => {
+            fetch('/api/job/?id=' + jobId)
+            .then(res => res.json())
+            .then(job => {
+                jobContainer.innerHTML = `
+                <div class="card">
+                    <div class="card-top">
+                        <div>
+                            <h5 class="card-title">${job.jobTitle}</h5>
+                            <p class="card-text">Company: ${job.companyName}</p>
+                            <p class="card-text">Location: ${job.location}</p>
+                        </div>
+                        <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
                     </div>
-                    <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
-                </div>
-                <hr>
-                <div class="card-details">
-                    <div><small>ID</small><p>${job.jobId}</p></div>
-                    <div><small>Salary</small><p>${job.salary}</p></div>
-                    <div><small>Experience</small><p>${job.experience}</p></div>
-                </div>
-                <hr>
-                <div><small>Description</small><p>${job.description}</p></div>
-                <hr>
-                <div class="card-actions">
-    ${localStorage.getItem('is_admin') === 'true'
-                    ? `<button type="button" class="delete-btn" onclick="(function(){
-            if(confirm('Are you sure you want to delete this job?')){
-                let jobs = JSON.parse(localStorage.getItem('jobs')||'[]');
-                jobs = jobs.filter(j => j.jobId !== '${job.jobId}');
-                localStorage.setItem('jobs', JSON.stringify(jobs));
-                window.location.href = 'AdminMain.html';
-            }
-        })()">Delete</button>`
-                    : `<button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>`}
-    <a href="UserMain.html">Back to Jobs</a>
-</div>
-            </div>`;
-        }
-    } else {
-        // show all jobs
-        jobs.forEach(function (job) {
-            jobContainer.innerHTML += `
-            <div class="card">
-                <div class="card-top">
-                    <div>
-                        <h5 class="card-title">${job.jobTitle}</h5>
-                        <p class="card-text">Company Name: ${job.companyName}</p>
+                    <hr>
+                    <div class="card-details">
+                        <div><small>ID</small><p>${job.jobId}</p></div>
+                        <div><small>Salary</small><p>${job.salary}</p></div>
+                        <div><small>Experience</small><p>${job.experience}</p></div>
                     </div>
-                    <span class="badge ${job.status === 'Open' ? 'open' : 'closed'}">${job.status}</span>
-                </div>
-                <hr>
-                <div class="card-details">
-                    <div><small>ID</small><p>${job.jobId}</p></div>
-                    <div><small>Salary</small><p>${job.salary}</p></div>
-                </div>
-                <hr>
-                <div class="card-actions">
-                    <button type="button" onclick="viewDetails('${job.jobId}')">View Details</button>
-                    <button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>
-                </div>
-            </div>`;
+                    <hr>
+                    <div><small>Description</small><p>${job.description}</p></div>
+                    <hr>
+                    <div class="card-actions">
+                        ${session.is_admin
+                            ? `<button type="button" class="delete-btn" onclick="deleteJobAndRedirect('${job.jobId}')">Delete</button>`
+                            : `<button type="button" onclick="applyForJob(this)" data-id="${job.jobId}">Apply</button>`}
+                        <a href="/user-main/">Back to Jobs</a>
+                    </div>
+                </div>`;
+            })
+            .catch(() => jobContainer.innerHTML = "<p>Job not found.</p>");
         });
     }
 }
 
+
 if (userJobContainer) {
     fetch('/api/jobs/')
         .then(res => res.json())
-        .then(jobs => {
-            jobs.forEach(function (job) {
+        .then(data => {
+            data.jobs.forEach(function (job) {
                 userJobContainer.innerHTML += `
                 <div class="card">
                     <div class="card-top">
@@ -154,8 +136,8 @@ if (userJobContainer) {
 if (adminJobContainer) {
     fetch('/api/jobs/')
         .then(res => res.json())
-        .then(jobs => {
-            jobs.forEach(job => {
+        .then(data => {
+            data.jobs.forEach(job => {
                 adminJobContainer.innerHTML += `
                 <tr data-id="${job.jobId}">
                     <td>${job.jobId}</td>
@@ -175,7 +157,8 @@ const container = document.getElementById("appliedJobsContainer");
 if (container) {
     fetch('/api/applied-jobs/')
         .then(res => res.json())
-        .then(appliedJobs => {
+        .then(data => {
+        const appliedJobs = data.applied_jobs;
             if (appliedJobs.length === 0) {
                 container.innerHTML = "<p>You have not applied for any jobs yet.</p>";
             } else {

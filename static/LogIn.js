@@ -50,13 +50,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
             })
             .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.isAdmin ? '/admin-main/' : '/user-main/';
-                } else {
-                    formError.textContent = data.error || 'An error occurred during login.';
-                }
-            })
+           .then(data => {
+    if (data.success) {
+        window.location.href = data.isAdmin ? '/admin-main/' : '/user-main/';
+    } else {
+        formError.textContent = data.error || 'An error occurred during login.';
+    }
+})
             .catch(err => {
                 formError.textContent = 'An error occurred. Please try again.';
                 console.error(err);
