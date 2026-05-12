@@ -30,7 +30,14 @@ def user_main(request):
 
 def job_details(request):
     return render(request, 'jobs/JobDetails.html')
-
+def get_session(request):
+    if request.session.get('user_email'):
+        return JsonResponse({
+            'isLoggedIn': True,
+            'isAdmin': request.session.get('is_admin'),
+            'email': request.session.get('user_email')
+        })
+    return JsonResponse({'isLoggedIn': False})
 def apply_job(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -41,7 +48,9 @@ def apply_job(request):
             return JsonResponse({'error': 'You have already applied for this job.'}, status=400)
         Application.objects.create(job=job, user_email=user_email)
         return JsonResponse({'success': True}, status=200)
-
+def logout_view(request):
+    request.session.flush()
+    return redirect('index')
 def withdraw_application(request):
     if request.method == 'POST':
         data = json.loads(request.body)
