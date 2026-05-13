@@ -163,3 +163,21 @@ def get_jobs(request):
         'status', 'description'
     ))
     return JsonResponse({'jobs': jobs})
+def update_job(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        job_id = data.get('jobId')
+        try:
+            job = Job.objects.get(jobId=job_id)
+            job.jobTitle = data.get('jobTitle')
+            job.companyName = data.get('companyName')
+            job.salary = data.get('salary')
+            job.experience = data.get('experience')
+            job.location = data.get('location')
+            job.status = data.get('status')
+            job.description = data.get('description')
+            job.save()
+            return JsonResponse({'success': True})
+        except Job.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Job not found'}, status=404)
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
