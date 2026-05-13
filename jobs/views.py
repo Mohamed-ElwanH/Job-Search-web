@@ -1,43 +1,93 @@
 import json
-from django.shortcuts import render, redirect # pyright: ignore[reportMissingModuleSource]
-from django.http import JsonResponse # pyright: ignore[reportMissingModuleSource]
-from django.views.decorators.csrf import csrf_exempt # pyright: ignore[reportMissingModuleSource]
-from django.forms.models import model_to_dict # pyright: ignore[reportMissingModuleSource]
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 from .models import Job, Application, UserProfile
 
 def home(request):
     return render(request, 'jobs/Home.html')
 
 def index(request):
+    request.session.flush()
     return render(request, 'jobs/Index.html')
 
 def login_view(request):
+    if request.session.get('user_email'):
+        if request.session.get('is_admin'):
+            return redirect('admin_main')
+        return redirect('user_main')
     return render(request, 'jobs/LogIn.html')
 
 def signup(request):
+    if request.session.get('user_email'):
+        if request.session.get('is_admin'):
+            return redirect('admin_main')
+        return redirect('user_main')
     return render(request, 'jobs/SignUp.html')
 
 def admin_main(request):
+    if not request.session.get('user_email'):
+        return redirect('login')
+    if not request.session.get('is_admin'):
+        return redirect('user_main')
     return render(request, 'jobs/AdminMain.html')
 
 def user_main(request):
-    jobs = list(Job.objects.values(
-        'jobId', 'jobTitle', 'companyName',
-        'salary', 'experience', 'location',
-        'status', 'description'
-    ))
-    return render(request, 'jobs/UserMain.html', {'jobs_json': json.dumps(jobs)})
+    if not request.session.get('user_email'):
+        return redirect('login')
+    if request.session.get('is_admin'):
+        return redirect('admin_main')
+    return render(request, 'jobs/UserMain.html')
 
 def job_details(request):
+    if not request.session.get('user_email'):
+        return redirect('login')
     return render(request, 'jobs/JobDetails.html')
+
+def applied_jobs(request):
+    if not request.session.get('user_email'):
+        return redirect('login')
+    if request.session.get('is_admin'):
+        return redirect('admin_main')
+    return render(request, 'jobs/AppliedJobs.html')
+
+def edit_job(request):
+    if not request.session.get('user_email'):
+        return redirect('login')
+    if not request.session.get('is_admin'):
+        return redirect('user_main')
+    return render(request, 'jobs/EditJob.html')
+
+def add_job(request):
+    if not request.session.get('user_email'):
+        return redirect('login')
+    if not request.session.get('is_admin'):
+        return redirect('user_main')
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        if Job.objects.filter(jobId=data['jobId']).exists():
+            return JsonResponse({'error': 'Job with this ID already exists.'}, status=400)
+        Job.objects.create(
+            jobId=data['jobId'],
+            jobTitle=data['jobTitle'],
+            companyName=data['companyName'],
+            salary=data['salary'],
+            experience=data['experience'],
+            location=data['location'],
+            status=data['status'],
+            description=data['description'],
+        )
+        return JsonResponse({'message': 'Job added successfully.'}, status=201)
+    return render(request, 'jobs/AddJob.html')
+
 def get_session(request):
-    if request.session.get('user_email'):
-        return JsonResponse({
-            'isLoggedIn': True,
-            'isAdmin': request.session.get('is_admin'),
-            'email': request.session.get('user_email')
-        })
-    return JsonResponse({'isLoggedIn': False})
+    return JsonResponse({
+        'is_logged_in': 'user_email' in request.session,
+        'is_admin': request.session.get('is_admin', False),
+        'user_email': request.session.get('user_email', ''),
+    })
+
 def apply_job(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -48,9 +98,7 @@ def apply_job(request):
             return JsonResponse({'error': 'You have already applied for this job.'}, status=400)
         Application.objects.create(job=job, user_email=user_email)
         return JsonResponse({'success': True}, status=200)
-def logout_view(request):
-    request.session.flush()
-    return redirect('index')
+
 def withdraw_application(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -59,9 +107,6 @@ def withdraw_application(request):
         job = Job.objects.get(jobId=jobId)
         Application.objects.filter(job=job, user_email=user_email).delete()
         return JsonResponse({'success': True}, status=200)
-
-def applied_jobs(request):
-    return render(request, 'jobs/AppliedJobs.html')
 
 def get_applied_jobs(request):
     user_email = request.session.get('user_email')
@@ -81,27 +126,6 @@ def get_applied_jobs(request):
     ]
     return JsonResponse({'applied_jobs': applied_jobs_data})
 
-def edit_job(request):
-    return render(request, 'jobs/EditJob.html')
-
-def add_job(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        if Job.objects.filter(jobId=data['jobId']).exists():
-            return JsonResponse({'error': 'Job with this ID already exists.'}, status=400)
-        Job.objects.create(
-            jobId=data['jobId'],
-            jobTitle=data['jobTitle'],
-            companyName=data['companyName'],
-            salary=data['salary'],
-            experience=data['experience'],
-            location=data['location'],
-            status=data['status'],
-            description=data['description'],
-        )
-        return JsonResponse({'message': 'Job added successfully.'}, status=201)
-    return render(request, 'jobs/AddJob.html')
-
 def get_job(request):
     job = Job.objects.get(jobId=request.GET.get('id'))
     return JsonResponse(model_to_dict(job))
@@ -116,11 +140,9 @@ def signup_api(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         email = data.get('email')
-
         if UserProfile.objects.filter(email=email).exists():
             return JsonResponse({'success': False, 'error': 'An account with this email already exists.'}, status=400)
-
-        user = UserProfile.objects.create(
+        UserProfile.objects.create(
             username=data.get('username'),
             email=email,
             password=data.get('password'),
@@ -134,7 +156,6 @@ def login_api(request):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
-
         try:
             user = UserProfile.objects.get(email=email, password=password)
             request.session['user_email'] = user.email
@@ -145,24 +166,14 @@ def login_api(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def get_jobs(request):
-    jobs = list(Job.objects.values())
-    return JsonResponse(jobs, safe=False)
-def get_session(request):
-    return JsonResponse({
-        'is_logged_in': 'user_email' in request.session,
-        'is_admin': request.session.get('is_admin', False),
-        'user_email': request.session.get('user_email', ''),
-    })
-def logout_view(request):
-    request.session.flush()
-    return JsonResponse({'success': True})
-def get_jobs(request):
     jobs = list(Job.objects.values(
         'jobId', 'jobTitle', 'companyName',
         'salary', 'experience', 'location',
         'status', 'description'
     ))
     return JsonResponse({'jobs': jobs})
+
+@csrf_exempt
 def update_job(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -181,3 +192,7 @@ def update_job(request):
         except Job.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Job not found'}, status=404)
     return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+def logout_view(request):
+    request.session.flush()
+    return JsonResponse({'success': True})
