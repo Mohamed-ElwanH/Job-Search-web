@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Edit Job</title>
     {% load static %}
@@ -37,7 +38,8 @@
                 </select><br><br>
 
                 <label for="description">Description:</label><br>
-                <textarea id="description" name="description" rows="4" cols="50" placeholder="enter the job description..."></textarea><br><br>
+                <textarea id="description" name="description" rows="4" cols="50"
+                    placeholder="enter the job description..."></textarea><br><br>
 
                 <button type="button" id="saveBtn">Save Changes</button>
                 <a href="{% url 'admin_main' %}">Cancel</a>
@@ -45,25 +47,41 @@
             <script>
                 const params = new URLSearchParams(window.location.search);
                 const jobId = params.get("id");
-                const jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
-                const jobIndex = jobs.findIndex(j => j.jobId === jobId);
 
-                if (jobIndex !== -1) {
-                    const job = jobs[jobIndex];
-                    document.getElementById("jobTitle").value = job.jobTitle;
-                    document.getElementById("companyName").value = job.companyName;
-                    document.getElementById("salary").value = job.salary;
-                    document.getElementById("experience").value = job.experience;
-                    document.getElementById("location").value = job.location || "";
-                    document.getElementById("status").value = job.status;
-                    document.getElementById("description").value = job.description;
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                if (jobId) {
+                    fetch(`/api/job/?id=${jobId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById("jobTitle").value = data.jobTitle;
+                            document.getElementById("companyName").value = data.companyName;
+                            document.getElementById("salary").value = data.salary;
+                            document.getElementById("experience").value = data.experience;
+                            document.getElementById("location").value = data.location;
+                            document.getElementById("status").value = data.status;
+                            document.getElementById("description").value = data.description;
+                        });
                 }
 
                 document.getElementById("saveBtn").onclick = function (e) {
                     e.preventDefault();
-                    if (jobIndex === -1) return;
-                    jobs[jobIndex] = {
-                        ...jobs[jobIndex],
+
+                    const updatedData = {
+                        jobId: jobId,
                         jobTitle: document.getElementById("jobTitle").value.trim(),
                         companyName: document.getElementById("companyName").value.trim(),
                         salary: document.getElementById("salary").value.trim(),
@@ -72,12 +90,28 @@
                         status: document.getElementById("status").value,
                         description: document.getElementById("description").value.trim(),
                     };
-                    localStorage.setItem("jobs", JSON.stringify(jobs));
-                    alert("Job updated successfully!");
-                    window.location.href = "{% url 'admin_main' %}";
+
+                    fetch('/api/update-job/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify(updatedData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Job updated successfully!");
+                                window.location.href = "{% url 'admin_main' %}";
+                            } else {
+                                alert("Error: " + data.error);
+                            }
+                        });
                 };
             </script>
         </div>
     </div>
 </body>
+
 </html>

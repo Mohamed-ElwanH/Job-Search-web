@@ -2,6 +2,7 @@ from django.urls import path # pyright: ignore[reportMissingModuleSource]
 from . import views
 
 urlpatterns = [
+    path('api/update-job/', views.update_job, name='update_job'),
     path('', views.home, name='home'),
     path('index/', views.index, name='index'),
     path('login/', views.login_view, name='login'),
